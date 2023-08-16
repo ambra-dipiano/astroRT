@@ -11,9 +11,10 @@ analysis_archive/
 rtasci/rtasci/cfg/leo_bkg.yml
 
 # Exceptions
-!gitignore
+!.gitignore
 !prod5install.sh
 !rtamock/execute_run.sh
+!environment.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

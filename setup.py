@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 setup( 
     name='rtavis',
     author='Ambra Di Piano <ambra.dipiano@inaf.it>',
-    package_dir={'visibility': 'rtavis', 'mocking': 'rtamock', 'analysis': 'rtasci'},
+    package_dir={'visibility': 'rtavis/rtavis', 'mocking': 'rtamock/rtamock', 'analysis': 'rtasci/rtasci'},
     packages=find_packages(),
     include_package_data=True,
     license='BSD-3-Clause',

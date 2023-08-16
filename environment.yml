@@ -1,0 +1,18 @@
+channels:
+  - conda-forge
+  - cta-observatory
+dependencies:
+  - python=3.10
+  - ctools
+  - astropy
+  - healpy
+  - pandas
+  - lxml
+  - pyyaml
+  - scipy
+  - pyregion
+  - seaborn
+  - gammapy
+  # optional (i.e. for notebook)
+  - matplotlib
+  - pandas
