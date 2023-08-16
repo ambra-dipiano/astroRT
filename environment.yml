@@ -1,3 +1,4 @@
+name: astrort
 channels:
   - conda-forge
   - cta-observatory
