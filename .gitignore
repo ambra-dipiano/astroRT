@@ -1,3 +1,22 @@
+# Patterns
+.*
+*.sh
+*.yml
+*.png
+
+# Folders
+tmp/
+analysis_archive/
+
+# Files
+
+# Exceptions
+!gitignore
+!prod5install.sh
+!environment.yml
+!rtamock/execute_run.sh
+!rtamock/myconfig.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -14,7 +33,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+#lib/
 lib64/
 parts/
 sdist/
