@@ -10,6 +10,6 @@ dependencies:
   - lxml
   - pyaml
   - scipy
-  - pyregion
+  - regions
   - seaborn
   - gammapy
