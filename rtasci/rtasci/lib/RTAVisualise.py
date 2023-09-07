@@ -8,7 +8,6 @@
 # *******************************************************************************
 
 import os
-import pyregion
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -20,12 +19,13 @@ from astropy import units as u
 from astropy.wcs import WCS
 from astropy.io import fits
 from scipy.interpolate import interp1d
+from regions import Regions
 
 
 # handle DS9 regiond (wip) ---!
 def handleReg(reg, col='black'):
   '''Returns regions from a DS9-like regione file.'''
-  r = pyregion.open(reg)
+  r = Regions.read('my_regions.reg', format='ds9')
   r[0].attr[1]['color'] = col
   return r
 
