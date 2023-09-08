@@ -53,7 +53,7 @@ def plotSkymap(file, reg='none', col='green', suffix='none', title='', xlabel='R
   # load region ---!
   if reg != 'none':
     try:
-      r = pyregion.open(reg).as_imagecoord(hdr)
+      r = Regions.read(reg).as_imagecoord(hdr)
       for i in range(len(r)):
         r[i].attr[1]['color'] = col
         patch_list, text_list = r.get_mpl_patches_texts()
@@ -97,7 +97,7 @@ def plotResmap(file, reg='none', col='black', suffix='none', title='map redisual
   ax = plt.subplot(111)
   # load region ---!
   if reg != 'none':
-    r = pyregion.open(reg).as_imagecoord(hdr)
+    r = Regions.read(reg).as_imagecoord(hdr)
     for i in range(len(r)):
       r[i].attr[1]['color'] = col
       patch_list, text_list = r.get_mpl_patches_texts()
@@ -352,7 +352,7 @@ def plotTSmap(file, reg='none', col='black', suffix='none', title='TS map', cbar
   ax = plt.subplot(111)
   # load region ---!
   if reg != 'none':
-    r = pyregion.open(reg).as_imagecoord(hdr)
+    r = Regions.read(reg).as_imagecoord(hdr)
     for i in range(len(r)):
       r[i].attr[1]['color'] = col
       patch_list, text_list = r.get_mpl_patches_texts()

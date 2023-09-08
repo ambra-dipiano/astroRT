@@ -57,7 +57,7 @@ if cfg['path']['filename'] == None:
         raise ValueError('No valid FITS file found')    
 elif type(cfg['path']['filename']) == str:
     if not isfile(join(catalog, cfg['path']['filename'])):
-            raise ValueError(f'Specified template {runid} does not exist in catalog')
+            raise ValueError(f'Specified template does not exist in catalog')
     runids = [cfg['path']['filename']]
 else:
     runids = cfg['path']['filename']
