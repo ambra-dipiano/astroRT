@@ -15,6 +15,7 @@ rtasci/rtasci/cfg/leo_bkg.yml
 !prod5install.sh
 !rtamock/execute_run.sh
 !environment.yml
+!rtavis/rtavis/lib/*py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -32,7 +33,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-#lib/
 lib64/
 parts/
 sdist/
