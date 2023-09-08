@@ -18,8 +18,7 @@ import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
 from astropy.io import fits
-from astropy.table import Table
-from lib.visibility import Visibility, complete_irf_name
+from rtavis.utils.visibility import Visibility
 from astropy.coordinates import solar_system_ephemeris
 
 # parse command line inputs

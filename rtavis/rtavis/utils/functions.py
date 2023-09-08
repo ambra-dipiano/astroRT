@@ -53,7 +53,7 @@ def append_new_line(file_name, text_to_append):
         if len(data) > 0:
             file_object.write("\n")
         # Append text at the end of file
-        file_object.write(text_to_append)
+        file_object.write(text_to_append) 
 
 # -------------------------------------------------------------------------------------------------
 def irf_selection(site,z,delta_t):
