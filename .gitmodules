@@ -1,0 +1,9 @@
+[submodule "rtasci"]
+	path = rtasci
+	url = git@github.com:ambra-dipiano/rtasci.git
+[submodule "rtavis"]
+	path = rtavis
+	url = git@github.com:ambra-dipiano/rtavis.git
+[submodule "rtamock"]
+	path = rtamock
+	url = git@github.com:ambra-dipiano/rtamock.git

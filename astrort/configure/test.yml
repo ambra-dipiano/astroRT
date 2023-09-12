@@ -1,0 +1,15 @@
+simulator:
+  name: test
+  array: lst
+  irf: North_z60_0.5h_LST
+  prod: prod5
+  pointing: random
+  duration: 300
+  samples: 5
+  seed: 1
+  model: $TEMPLATES$/crab.xml
+  output: /data01/homes/dipiano/astroRT/
+  
+visibility:
+  start_time: '2030-01-01T00:00:00'
+
