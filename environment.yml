@@ -1,5 +1,6 @@
 name: astrort
 channels:
+  - anaconda
   - defaults
   - conda-forge
   - cta-observatory
@@ -8,12 +9,13 @@ dependencies:
   - _openmp_mutex=4.5=2_kmp_llvm
   - astropy=5.1=py38h7deecbd_0
   - asttokens=2.0.5=pyhd3eb1b0_0
+  - attrs=22.1.0=py38h06a4308_0
   - backcall=0.2.0=pyhd3eb1b0_0
   - blas=1.0=mkl
   - brotli=1.0.9=h5eee18b_7
   - brotli-bin=1.0.9=h5eee18b_7
   - c-ares=1.19.1=h5eee18b_0
-  - ca-certificates=2023.08.22=h06a4308_0
+  - ca-certificates=2023.01.10=h06a4308_0
   - cfitsio=3.430=hd130d23_1
   - comm=0.1.2=py38h06a4308_0
   - contourpy=1.0.5=py38hdb19cb5_0
@@ -127,7 +129,7 @@ dependencies:
   - pyparsing=3.0.9=py38h06a4308_0
   - pyqt=5.15.7=py38h6a678d5_1
   - pyqt5-sip=12.11.0=py38h6a678d5_1
-  - pytest=7.4.0=py38h06a4308_0
+  - pytest=7.1.2=py38h06a4308_0
   - pytest-runner=6.0.0=py38h06a4308_0
   - python=3.8.17=h955ad1f_0
   - python-dateutil=2.8.2=pyhd3eb1b0_0
@@ -162,3 +164,7 @@ dependencies:
   - zipp=3.11.0=py38h06a4308_0
   - zlib=1.2.13=h5eee18b_0
   - zstd=1.5.5=hc292b87_0
+  - pip:
+    - astrort==0.0.0
+    - rtavis==0.0.0
+prefix: /data01/homes/dipiano/.conda/envs/astrort
