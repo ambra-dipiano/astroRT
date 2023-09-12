@@ -7,7 +7,7 @@
 # *****************************************************************************
 
 import pytest
-from astrort.utils.utils import seeds_to_string_formatter, get_instrument_fov
+from astrort.utils.utils import *
 
 @pytest.mark.astrort_tmp_folder
 @pytest.mark.parametrize('samples', [3, 5, 8, 10])
@@ -37,4 +37,15 @@ def test_get_instrument_fov(array):
         assert fov == 5 
     return fov
 
-
+@pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'cta', 'north', 'south'])
+def test_get_instrument_tev_range(array):
+    erange = get_instrument_tev_range(array)
+    if array == 'lst':
+        assert erange == [0.03, 5]
+    elif array == 'mst':
+        assert erange == [1, 50]
+    elif array == 'sst':
+        assert erange == [5, 150]
+    else:
+        assert erange == [0.03, 150]
+    return erange
