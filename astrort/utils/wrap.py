@@ -7,6 +7,8 @@
 # *****************************************************************************
 
 import yaml
+from os import makedirs
+from os.path import dirname, abspath, join, basename
 from astrort.utils.utils import seeds_to_string_formatter, get_instrument_fov
 from astrort.configure.check_configuration import CheckConfiguration
 
@@ -17,6 +19,8 @@ def load_yaml_conf(yamlfile):
     return configuration
 
 def configure_simulator_no_visibility(simulator, configuration):
+    if '$TEMPLATES$' in configuration['model']:
+        configuration['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(configuration['model']))
     simulator.model = configuration['model']
     simulator.output = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'])
     simulator.caldb = configuration['prod']
@@ -24,3 +28,4 @@ def configure_simulator_no_visibility(simulator, configuration):
     simulator.fov = get_instrument_fov(configuration['array'])
     simulator.t = [0, configuration['duration']]
     simulator.seed = configuration['seed']
+    return simulator

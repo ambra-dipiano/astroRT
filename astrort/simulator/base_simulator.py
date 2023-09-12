@@ -7,15 +7,23 @@
 # *****************************************************************************
 
 import argparse
-from rtasci.rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
-from astrort.utils.wrap import load_yaml_conf
+from os import makedirs
+from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
+from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility
 
 def main():
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-cf', '--conf', type=str, required=True, help="Path of yaml configuration file")
+    parser.add_argument('-f', '--configuration', type=str, required=True, help="Path of yaml configuration file")
     args = parser.parse_args()
 
-    conf = load_yaml_conf(args.conf)
+    configutation = load_yaml_conf(args.configuration)
+    makedirs(configutation['simulator']['output'], exist_ok=True)
+    
+    simulator = RTACtoolsSimulation()
+    for i in range(configutation['simulator']['samples']):
+        configutation['simulator']['seed'] += i
+        simulator = configure_simulator_no_visibility(simulator, configutation['simulator'])
+        simulator.run_simulation()
 
 if __name__ == '__main__':
     main()
