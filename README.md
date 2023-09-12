@@ -1,6 +1,5 @@
 # astroRT
 
-
 ## Environment
 
 To create a virtual environment with all required dependencies:
@@ -23,6 +22,8 @@ To install editable version use instead:
 pip install -e .
 ```
 
+# Submodules
+
 ## rtasci
 
 Simulator of CTA observations.
@@ -35,6 +36,6 @@ Visibility tool for CTA observations.
 
 Scenario mocking software to reproduce CTA real-time observation and analysis conditions.
 
-## rtadeep
+## rtadeep [TODO]
 
 Deep learning solutions for CTA real-time analysis.
