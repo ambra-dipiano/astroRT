@@ -10,7 +10,7 @@ import pytest
 from astrort.utils.wrap import load_yaml_conf
 from astrort.configure.check_configuration import CheckConfiguration
 
-@pytest.mark.skip('to-do')
+@pytest.mark.skip('#TODO')
 @pytest.mark.rtadeep_configuration
 class TestBaseSimulator:
 
