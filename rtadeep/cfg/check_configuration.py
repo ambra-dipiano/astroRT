@@ -17,15 +17,19 @@ class CheckConfiguration():
         self.check_tags()
         self.check_simulator()
         self.check_visibility()
+        return self
 
     def check_tags(self):
         tags = ['simulator', 'visibility']
         assert self.conf.keys() == tags
+        return self
 
     def check_simulator(self):
         keys = ['name', 'irf', 'prod', 'coordinates', 'duration', 'samples', 'seed']
         assert self.conf['simulator'].keys() == keys
+        return self
 
     def check_visibility(self):
         keys = ['start_time']
         assert self.conf['visibility'].keys() == keys
+        return self
