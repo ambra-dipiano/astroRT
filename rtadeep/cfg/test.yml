@@ -1,0 +1,12 @@
+simulator:
+  name: test
+  irf: North_z60_0.5h_LST
+  prod: prod5
+  coordinates: random
+  duration: 300
+  samples: 5
+  seed: 1
+  
+visibility:
+  start_time: today
+
