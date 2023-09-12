@@ -29,3 +29,14 @@ def get_instrument_fov(instrument):
     else:
         fov = 5 
     return fov
+
+def get_instrument_tev_range(array):
+    if array == 'lst':
+        erange = [0.03, 5]
+    elif array == 'mst':
+        erange = [1, 50]
+    elif array == 'sst':
+        erange = [5, 150]
+    else:
+        erange = [0.03, 150]
+    return erange

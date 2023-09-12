@@ -16,9 +16,11 @@ def load_yaml_conf(yamlfile):
         CheckConfiguration(configuration=configuration)
     return configuration
 
-def configure_simulator(simulator, configuration):
+def configure_simulator_no_visibility(simulator, configuration):
     simulator.model = configuration['model']
     simulator.output = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'])
     simulator.caldb = configuration['prod']
     simulator.irf = configuration['irf']
     simulator.fov = get_instrument_fov(configuration['array'])
+    simulator.t = [0, configuration['duration']]
+    simulator.seed = configuration['seed']
