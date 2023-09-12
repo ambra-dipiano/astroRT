@@ -7,7 +7,7 @@
 # *****************************************************************************
 
 import pytest
-import rtadeep
+import astrort
 from os.path import join, dirname, abspath
 
 @pytest.fixture(scope='function')
