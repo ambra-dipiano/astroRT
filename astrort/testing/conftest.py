@@ -9,7 +9,13 @@
 import pytest
 import astrort
 from os.path import join, dirname, abspath
+from os import makedirs
 
 @pytest.fixture(scope='function')
-def rtadeep_configuration():
-    return join(dirname(abspath(astrort.__file__)), 'cfg', 'test.yml')
+def astrort_configuration():
+    return join(dirname(abspath(astrort.__file__)), 'configure', 'test.yml')
+
+@pytest.fixture(scope='function')
+def astrort_tmp_folder():
+    makedirs(join(dirname(abspath(astrort.__file__)), 'testing', 'tmp'), exist_ok=True)
+    return join(dirname(abspath(astrort.__file__)), 'testing', 'tmp')
