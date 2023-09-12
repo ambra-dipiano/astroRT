@@ -8,7 +8,7 @@ simulator:
   samples: 5
   seed: 1
   model: $TEMPLATES$/crab.xml
-  output: /data01/homes/dipiano/astroRT/
+  output: /data01/homes/dipiano/astroRT/testing/output_tmp
   
 visibility:
   start_time: '2030-01-01T00:00:00'
