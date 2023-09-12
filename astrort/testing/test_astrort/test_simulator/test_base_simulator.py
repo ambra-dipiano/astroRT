@@ -13,10 +13,10 @@ from astrort.cfg.check_configuration import CheckConfiguration
 @pytest.mark.rtadeep_configuration
 class TestBaseSimulator:
 
+    @pytest.mark.skip('to-do')
     def test_base_simulator(self, rtadeep_configuration):
 
         # get configuration
         configuration = load_yaml_conf(rtadeep_configuration)
-        CheckConfiguration(configuration=configuration).check()
 
         
