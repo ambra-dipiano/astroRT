@@ -8,34 +8,34 @@
 
 import pytest
 from astrort.utils.wrap import load_yaml_conf
-from astrort.cfg.check_configuration import CheckConfiguration
+from astrort.configure.check_configuration import CheckConfiguration
 
-@pytest.mark.rtadeep_configuration
+@pytest.mark.astrort_configuration
 class TestCheckConfiguration:
 
-    def test_check(self, rtadeep_configuration):
-        configuration = load_yaml_conf(rtadeep_configuration)
+    def test_check(self, astrort_configuration):
+        configuration = load_yaml_conf(astrort_configuration)
         try:
             CheckConfiguration(configuration=configuration).check()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_tags(self, rtadeep_configuration):
-        configuration = load_yaml_conf(rtadeep_configuration)
+    def test_check_tags(self, astrort_configuration):
+        configuration = load_yaml_conf(astrort_configuration)
         try:
             CheckConfiguration(configuration=configuration).check_tags()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_simulator(self, rtadeep_configuration):
-        configuration = load_yaml_conf(rtadeep_configuration)
+    def test_check_simulator(self, astrort_configuration):
+        configuration = load_yaml_conf(astrort_configuration)
         try:
             CheckConfiguration(configuration=configuration).check_simulator()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_visibility(self, rtadeep_configuration):
-        configuration = load_yaml_conf(rtadeep_configuration)
+    def test_check_visibility(self, astrort_configuration):
+        configuration = load_yaml_conf(astrort_configuration)
         try:
             CheckConfiguration(configuration=configuration).check_visibility()
         except AssertionError as e:
