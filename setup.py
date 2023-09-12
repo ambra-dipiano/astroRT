@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 setup( 
     name='astrort',
     author='Ambra Di Piano <ambra.dipiano@inaf.it>',
-    package_dir={'rtavis': 'rtavis', 'rtamock': 'rtamock', 'rtasci': 'rtasci', 'rtadeep': 'rtadeep'},
+    package_dir={'astrort': 'astrort'},
     packages=find_packages(),
     include_package_data=True,
     license='BSD-3-Clause',
