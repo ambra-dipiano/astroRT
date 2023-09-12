@@ -7,16 +7,18 @@
 # *****************************************************************************
 
 import argparse
-from rtasci.utils.RTACtoolsSimulation import RTACtoolsSimulation
-from rtavis.utils.visibility import Visibility
+from rtasci.rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
 from astrort.utils.wrap import load_yaml_conf
-from astrort.cfg.check_configuration import CheckConfiguration
 
-parser = argparse.ArgumentParser(description='')
-parser.add_argument('-cf', '--conf', type=str, required=True, help="Path of yaml configuration file")
-args = parser.parse_args()
+def main():
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('-cf', '--conf', type=str, required=True, help="Path of yaml configuration file")
+    args = parser.parse_args()
 
-conf = load_yaml_conf(args.conf)
+    conf = load_yaml_conf(args.conf)
+
+if __name__ == '__main__':
+    main()
 
 
 
