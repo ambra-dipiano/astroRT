@@ -9,7 +9,7 @@
 import pytest
 from astrort.utils.wrap import load_yaml_conf
 
-@pytest.mark.rtadeep_configuration
-def test_load_yaml_conf(rtadeep_configuration):
-    configuration = load_yaml_conf(rtadeep_configuration)
+@pytest.mark.astrort_configuration
+def test_load_yaml_conf(astrort_configuration):
+    configuration = load_yaml_conf(astrort_configuration)
     assert type(configuration) == dict

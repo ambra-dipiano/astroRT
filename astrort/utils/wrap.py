@@ -7,10 +7,18 @@
 # *****************************************************************************
 
 import yaml
-from astrort.cfg.check_configuration import CheckConfiguration
+from astrort.utils.utils import seeds_to_string_formatter, get_instrument_fov
+from astrort.configure.check_configuration import CheckConfiguration
 
 def load_yaml_conf(yamlfile):
     with open(yamlfile) as f:
         configuration = yaml.load(f, Loader=yaml.FullLoader)
         CheckConfiguration(configuration=configuration)
     return configuration
+
+def configure_simulator(simulator, configuration):
+    simulator.model = configuration['model']
+    simulator.output = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'])
+    simulator.caldb = configuration['prod']
+    simulator.irf = configuration['irf']
+    simulator.fov = get_instrument_fov(configuration['array'])
