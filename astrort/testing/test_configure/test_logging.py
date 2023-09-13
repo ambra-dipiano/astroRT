@@ -21,6 +21,6 @@ def test_set_logger():
 @pytest.mark.test_tmp_folder
 @pytest.mark.test_conf_file
 def test_set_logger(test_tmp_folder):
-    log = set_logger(logging.DEBUG, join(test_tmp_folder, 'test_set_logger.log'))
+    log = set_logger(logging.CRITICAL, join(test_tmp_folder, 'test_set_logger.log'))
     log.debug('TEST')
     assert isfile(join(test_tmp_folder, 'test_set_logger.log')) is True
