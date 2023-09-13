@@ -14,7 +14,7 @@ def set_logger(level, filename=None):
     log = logging.getLogger()
     log.setLevel(level)
     # console logger
-    formatter = logging.Formatter('[%(asctime)s] %(name)s %(levelname)s: %(message)s')
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)s: %(message)s')
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(formatter)
     log.addHandler(consoleHandler)
