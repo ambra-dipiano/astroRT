@@ -26,3 +26,20 @@ def set_logger(level, filename=None):
         fileHandler.setFormatter(formatter)
         log.addHandler(fileHandler)
     return log
+
+def get_log_level(level):
+    if level in ['DEBUG', 'debug', 10]:
+        level = logging.DEBUG
+    elif level in ['INFO', 'info', 20]:
+        level = logging.INFO
+    elif level in ['WARN', 'WARNING', 'warn', 'warning', 30]:
+        level = logging.WARN
+    elif level in ['ERROR', 'error', 40]:
+        level = logging.ERROR
+    elif level in ['CRITICAL', 'critical', 50]:
+        level = logging.CRITICAL
+    else:
+        level = logging.NOTSET
+    return level
+
+    return
