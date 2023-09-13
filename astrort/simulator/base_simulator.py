@@ -10,26 +10,25 @@ import argparse
 from os import makedirs
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
 from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility
-from astrort.configure.logging import set_logger
+from astrort.configure.logging import set_logger, get_log_level
 
 def base_simulator(configuration_file):
     configuration = load_yaml_conf(configuration_file)
-    log = set_logger(configuration['logging']['level'])
+    log = set_logger(get_log_level(configuration['logging']['level']))
     # create output dir
     log.info(f"Creating {configuration['simulator']['output']}")
     makedirs(configuration['simulator']['output'], exist_ok=True)
-    
     # start simulations
     print(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
     for i in range(configuration['simulator']['samples']):
         simulator = RTACtoolsSimulation()
-        configuration['simulator']['seed'] += i
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'])
         simulator.run_simulation()
         print(f"Simulation (seed = {configuration['simulator']['seed']}) complete")
+        configuration['simulator']['seed'] += 1
         del simulator
     # end simulations
-    print(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} ")
+    print(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
 
 
 def slurm_submission(configuration_file):
