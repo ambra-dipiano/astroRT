@@ -15,13 +15,13 @@ def test_seeds_to_string_formatter(samples, astrort_tmp_folder):
     name = seeds_to_string_formatter(samples, astrort_tmp_folder, name='test', seed=1)
 
     if samples <= 3:
-        assert name == f"{astrort_tmp_folder}/test_001"
+        assert name == f"{astrort_tmp_folder}/test_001.fits"
     elif samples <= 5:
-        assert name == f"{astrort_tmp_folder}/test_00001"
+        assert name == f"{astrort_tmp_folder}/test_00001.fits"
     elif samples <= 8:
-        assert name == f"{astrort_tmp_folder}/test_00000001"
+        assert name == f"{astrort_tmp_folder}/test_00000001.fits"
     else:
-        assert name == f"{astrort_tmp_folder}/test_1"
+        assert name == f"{astrort_tmp_folder}/test_1.fits"
 
 @pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'cta', 'north', 'south'])
 def test_get_instrument_fov(array):
