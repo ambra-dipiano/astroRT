@@ -9,19 +9,19 @@
 import pytest
 from astrort.utils.utils import *
 
-@pytest.mark.astrort_tmp_folder
+@pytest.mark.test_tmp_folder
 @pytest.mark.parametrize('samples', [3, 5, 8, 10])
-def test_seeds_to_string_formatter(samples, astrort_tmp_folder):
-    name = seeds_to_string_formatter(samples, astrort_tmp_folder, name='test', seed=1)
+def test_seeds_to_string_formatter(samples, test_tmp_folder):
+    name = seeds_to_string_formatter(samples, test_tmp_folder, name='test', seed=1)
 
     if samples <= 1e3:
-        assert name == f"{astrort_tmp_folder}/test_001.fits"
+        assert name == f"{test_tmp_folder}/test_001.fits"
     elif samples <= 1e5:
-        assert name == f"{astrort_tmp_folder}/test_00001.fits"
+        assert name == f"{test_tmp_folder}/test_00001.fits"
     elif samples <= 1e8:
-        assert name == f"{astrort_tmp_folder}/test_00000001.fits"
+        assert name == f"{test_tmp_folder}/test_00000001.fits"
     else:
-        assert name == f"{astrort_tmp_folder}/test_1.fits"
+        assert name == f"{test_tmp_folder}/test_1.fits"
 
 @pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'cta', 'north', 'south'])
 def test_get_instrument_fov(array):
