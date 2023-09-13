@@ -7,17 +7,26 @@
 # *****************************************************************************
 
 import pytest
+from shutil import rmtree
+from os import listdir
+from os.path import isfile, join
+from astrort.simulator.base_simulator import base_simulator
 from astrort.utils.wrap import load_yaml_conf
-from astrort.configure.check_configuration import CheckConfiguration
 
-@pytest.mark.skip('#TODO')
-@pytest.mark.rtadeep_configuration
-class TestBaseSimulator:
+@pytest.mark.test_conf_file
+def test_base_simulator(test_conf_file):
 
-    @pytest.mark.skip('to-do')
-    def test_base_simulator(self, rtadeep_configuration):
+    # clean output
+    conf = load_yaml_conf(test_conf_file)
+    rmtree(conf['simulator']['output'])
 
-        # get configuration
-        configuration = load_yaml_conf(rtadeep_configuration)
+    # run simulator
+    base_simulator(test_conf_file)
 
-        
+    # check output
+    expected_simulations = conf['simulator']['samples']
+    found_simulations = len([f for f in listdir(conf['simulator']['output']) if isfile(join(conf['simulator']['output'], f)) and '.fits' in f and conf['simulator']['name'] in f])
+    assert found_simulations == expected_simulations, f"Expected {expected_simulations} simulations, found {found_simulations}"
+
+
+    
