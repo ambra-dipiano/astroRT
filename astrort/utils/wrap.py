@@ -7,7 +7,6 @@
 # *****************************************************************************
 
 import yaml
-from os import makedirs
 from os.path import dirname, abspath, join, basename
 from astrort.utils.utils import seeds_to_string_formatter, get_instrument_fov
 from astrort.configure.check_configuration import CheckConfiguration
