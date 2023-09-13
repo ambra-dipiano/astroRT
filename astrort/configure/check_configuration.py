@@ -20,7 +20,7 @@ class CheckConfiguration():
         return self
 
     def check_tags(self):
-        tags = ['simulator', 'visibility']
+        tags = ['simulator', 'visibility', 'logging']
         assert self.conf.keys() == tags
         return self
 
@@ -42,4 +42,11 @@ class CheckConfiguration():
         keys = ['start_time']
         assert self.conf['visibility'].keys() == keys
         assert type(self.conf['visibility']['start_time']) == str
+        return self
+
+    def check_logging(self):
+        keys = ['level', 'logfile']
+        assert self.conf['logging'].keys() == keys
+        assert (type(self.conf['logging']['level']) == str or type(self.conf['logging']['level']) == int) 
+        assert type(self.conf['logging']['logfile']) == str 
         return self
