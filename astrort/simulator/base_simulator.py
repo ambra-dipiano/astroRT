@@ -19,16 +19,16 @@ def base_simulator(configuration_file):
     log.info(f"Creating {configuration['simulator']['output']}")
     makedirs(configuration['simulator']['output'], exist_ok=True)
     # start simulations
-    print(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
+    log.info(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
     for i in range(configuration['simulator']['samples']):
         simulator = RTACtoolsSimulation()
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'])
         simulator.run_simulation()
-        print(f"Simulation (seed = {configuration['simulator']['seed']}) complete")
+        log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete")
         configuration['simulator']['seed'] += 1
         del simulator
     # end simulations
-    print(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
+    log.info(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
 
 
 def slurm_submission(configuration_file):
