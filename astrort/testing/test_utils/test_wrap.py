@@ -9,7 +9,7 @@
 import pytest
 from astrort.utils.wrap import load_yaml_conf
 
-@pytest.mark.astrort_configuration
-def test_load_yaml_conf(astrort_configuration):
-    configuration = load_yaml_conf(astrort_configuration)
+@pytest.mark.test_conf_file
+def test_load_yaml_conf(test_conf_file):
+    configuration = load_yaml_conf(test_conf_file)
     assert type(configuration) == dict

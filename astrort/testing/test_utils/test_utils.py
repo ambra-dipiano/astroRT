@@ -14,11 +14,11 @@ from astrort.utils.utils import *
 def test_seeds_to_string_formatter(samples, astrort_tmp_folder):
     name = seeds_to_string_formatter(samples, astrort_tmp_folder, name='test', seed=1)
 
-    if samples <= 3:
+    if samples <= 1e3:
         assert name == f"{astrort_tmp_folder}/test_001.fits"
-    elif samples <= 5:
+    elif samples <= 1e5:
         assert name == f"{astrort_tmp_folder}/test_00001.fits"
-    elif samples <= 8:
+    elif samples <= 1e8:
         assert name == f"{astrort_tmp_folder}/test_00000001.fits"
     else:
         assert name == f"{astrort_tmp_folder}/test_1.fits"

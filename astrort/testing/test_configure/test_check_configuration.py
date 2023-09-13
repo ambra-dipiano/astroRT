@@ -10,39 +10,39 @@ import pytest
 from astrort.utils.wrap import load_yaml_conf
 from astrort.configure.check_configuration import CheckConfiguration
 
-@pytest.mark.astrort_configuration
+@pytest.mark.test_conf_file
 class TestCheckConfiguration:
 
-    def test_check(self, astrort_configuration):
-        configuration = load_yaml_conf(astrort_configuration)
+    def test_check(self, test_conf_file):
+        configuration = load_yaml_conf(test_conf_file)
         try:
             CheckConfiguration(configuration=configuration).check()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_tags(self, astrort_configuration):
-        configuration = load_yaml_conf(astrort_configuration)
+    def test_check_tags(self, test_conf_file):
+        configuration = load_yaml_conf(test_conf_file)
         try:
             CheckConfiguration(configuration=configuration).check_tags()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_simulator(self, astrort_configuration):
-        configuration = load_yaml_conf(astrort_configuration)
+    def test_check_simulator(self, test_conf_file):
+        configuration = load_yaml_conf(test_conf_file)
         try:
             CheckConfiguration(configuration=configuration).check_simulator()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_visibility(self, astrort_configuration):
-        configuration = load_yaml_conf(astrort_configuration)
+    def test_check_visibility(self, test_conf_file):
+        configuration = load_yaml_conf(test_conf_file)
         try:
             CheckConfiguration(configuration=configuration).check_visibility()
         except AssertionError as e:
             type(e) == AssertionError
 
-    def test_check_logging(self, astrort_configuration):
-        configuration = load_yaml_conf(astrort_configuration)
+    def test_check_logging(self, test_conf_file):
+        configuration = load_yaml_conf(test_conf_file)
         try:
             CheckConfiguration(configuration=configuration).check_logging()
         except AssertionError as e:
