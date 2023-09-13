@@ -12,7 +12,7 @@ from os.path import join, dirname, abspath
 from os import makedirs
 
 @pytest.fixture(scope='function')
-def astrort_configuration():
+def test_conf_file():
     return join(dirname(abspath(astrort.__file__)), 'configure', 'test.yml')
 
 @pytest.fixture(scope='function')
