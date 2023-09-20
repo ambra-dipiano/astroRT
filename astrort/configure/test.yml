@@ -5,7 +5,7 @@ simulator:
   prod: prod5-v0.1
   pointing: random
   duration: 10
-  samples: 5
+  samples: 2
   seed: 1
   model: $TEMPLATES$/crab.xml
   output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
@@ -16,3 +16,13 @@ visibility:
 logging:
   level: CRITICAL
   logfile:
+
+slurm:
+  nodes: 5
+  tasks: 1
+  cpus: 2
+  mem: 32G
+  environment: astrort
+  name: test
+  account: dipiano
+

@@ -50,3 +50,15 @@ class CheckConfiguration():
         assert (type(self.conf['logging']['level']) == str or type(self.conf['logging']['level']) == int) 
         assert type(self.conf['logging']['logfile']) == str 
         return self
+    
+    def check_slurm(self):
+        keys = ['nodes', 'tasks', 'cpus', 'mem', 'environment', 'name', 'account']
+        assert self.conf['slurm'].keys() == keys
+        assert type(self.conf['slurm']['nodes']) == int
+        assert type(self.conf['slurm']['tasks']) == int
+        assert type(self.conf['slurm']['cpus']) == int
+        assert type(self.conf['slurm']['mem']) == str 
+        assert type(self.conf['slurm']['environment']) == str 
+        assert type(self.conf['slurm']['name']) == str 
+        assert type(self.conf['slurm']['account']) == str 
+        return self

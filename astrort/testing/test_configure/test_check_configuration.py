@@ -47,3 +47,10 @@ class TestCheckConfiguration:
             CheckConfiguration(configuration=configuration).check_logging()
         except AssertionError as e:
             type(e) == AssertionError
+
+    def test_check_slurm(self, test_conf_file):
+        configuration = load_yaml_conf(test_conf_file)
+        try:
+            CheckConfiguration(configuration=configuration).check_logging()
+        except AssertionError as e:
+            type(e) == AssertionError
