@@ -21,7 +21,7 @@ def configure_simulator_no_visibility(simulator, configuration):
     if '$TEMPLATES$' in configuration['model']:
         configuration['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(configuration['model']))
     simulator.model = configuration['model']
-    simulator.output = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'])
+    simulator.output = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], 'fits')
     simulator.caldb = configuration['prod']
     simulator.irf = configuration['irf']
     simulator.fov = get_instrument_fov(configuration['array'])

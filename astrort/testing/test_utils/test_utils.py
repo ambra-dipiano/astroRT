@@ -12,7 +12,7 @@ from astrort.utils.utils import *
 @pytest.mark.test_tmp_folder
 @pytest.mark.parametrize('samples', [3, 5, 8, 10])
 def test_seeds_to_string_formatter(samples, test_tmp_folder):
-    name = seeds_to_string_formatter(samples, test_tmp_folder, name='test', seed=1)
+    name = seeds_to_string_formatter(samples, test_tmp_folder, name='test', seed=1, ext='fits')
 
     if samples <= 1e3:
         assert name == f"{test_tmp_folder}/test_001.fits"

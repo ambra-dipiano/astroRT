@@ -8,15 +8,15 @@
 
 from os.path import join
 
-def seeds_to_string_formatter(samples, output, name, seed):
+def seeds_to_string_formatter(samples, output, name, seed, ext):
     if samples <= 1e3:
-        name = join(output, f"{name}_{seed:03d}.fits")
+        name = join(output, f"{name}_{seed:03d}.{ext}")
     elif samples <= 1e5:
-        name = join(output, f"{name}_{seed:05d}.fits")
+        name = join(output, f"{name}_{seed:05d}.{ext}")
     elif samples <= 1e8:
-        name = join(output, f"{name}_{seed:08d}.fits")
+        name = join(output, f"{name}_{seed:08d}.{ext}")
     else:
-        name = join(output, f"{name}_{seed}.fits")
+        name = join(output, f"{name}_{seed}.{ext}")
     return name
 
 def get_instrument_fov(instrument):

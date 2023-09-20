@@ -11,10 +11,10 @@ from os import system
 from os.path import join, dirname, abspath
 
 def make_configuration(jobname_conf, configuration, node_number):
-    configuration['simulator']['seed'] = node_number*configuration['simulator']['samples']
+    configuration['simulator']['samples'] = node_number*configuration['simulator']['samples'] + 1
     # write new configuration
     with open(jobname_conf, 'w+') as f:
-        new_configuration = dump(configuration, f, default_flow_style=False)
+        dump(configuration, f, default_flow_style=False)
 
 def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log):
     # write sbatch
@@ -34,9 +34,9 @@ def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log):
 
 def make_sbatch(jobname, configuration, node_number):
     output = configuration['simulator']['output']
-    jobname_sh = join(output, f"job_{jobname}.sh")
-    jobname_log = join(output, f"job_{jobname}.log")
-    jobname_conf = join(output, f"job_{jobname}.yml")
+    jobname_sh = join(output, f"{jobname}.sh")
+    jobname_log = join(output, f"{jobname}.slurm")
+    jobname_conf = join(output, f"{jobname}.yml")
     make_configuration(jobname_conf, configuration, node_number)
     make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
     system(f"sbatch {jobname_sh}")
