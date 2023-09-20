@@ -25,4 +25,5 @@ slurm:
   environment: astrort
   name: test
   account: dipiano
+  partition: large
 
