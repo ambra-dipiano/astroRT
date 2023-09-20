@@ -42,7 +42,7 @@ def slurm_submission(configuration_file, nodes):
     configuration['slurm']['nodes'] = nodes
     for node_number in range(configuration['slurm']['nodes']):
         jobname = f"{configuration['slurm']['name']}_{node_number+1}"
-        make_sbatch(jobname, configuration, node_number+1)
+        make_sbatch(jobname, configuration, node_number)
     return
 
 def main(configuration, nodes):
