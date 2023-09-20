@@ -11,6 +11,7 @@ from os import makedirs
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
 from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility
 from astrort.configure.logging import set_logger, get_log_level
+from astrort.configure.slurmjobs import make_sbatch
 
 def base_simulator(configuration_file):
     configuration = load_yaml_conf(configuration_file)
@@ -31,8 +32,24 @@ def base_simulator(configuration_file):
     log.info(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
 
 
-def slurm_submission(configuration_file):
+def slurm_submission(configuration_file, nodes):
+    configuration = load_yaml_conf(configuration_file)
+    log = set_logger(get_log_level(configuration['logging']['level']))
+    # create output dir
+    log.info(f"Creating {configuration['simulator']['output']}")
+    makedirs(configuration['simulator']['output'], exist_ok=True)
+    # sbatch jobs per each nodes
+    configuration['slurm']['nodes'] = nodes
+    for node_number in range(configuration['slurm']['nodes']):
+        jobname = f"{configuration['slurm']['name']}_{node_number+1}"
+        make_sbatch(jobname, configuration, node_number+1)
     return
+
+def main(configuration, nodes):
+    if nodes == 0:
+        base_simulator(configuration)
+    else:
+        slurm_submission(configuration, nodes)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -40,11 +57,5 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--nodes', type=int, default=0, help='Number of slurm nodes to occupy for submission, if unset it will not submit to slurm' )
     args = parser.parse_args()
 
-
-    if args.nodes == 0:
-        base_simulator(args.configuration)
-    else:
-        slurm_submission(args.configuration)
-
-
+    main(args.configuration, args.nodes)
 
