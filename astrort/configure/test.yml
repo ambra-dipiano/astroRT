@@ -1,5 +1,5 @@
 simulator:
-  name: test
+  name: crab
   array: lst
   irf: North_z60_0.5h_LST
   prod: prod5-v0.1
