@@ -11,7 +11,7 @@ from os import system
 from os.path import join, dirname, abspath
 
 def make_configuration(jobname_conf, configuration, node_number):
-    configuration['simulator']['samples'] = node_number*configuration['simulator']['samples'] + 1
+    configuration['simulator']['seed'] = node_number*configuration['simulator']['samples'] + 1
     # write new configuration
     with open(jobname_conf, 'w+') as f:
         dump(configuration, f, default_flow_style=False)
