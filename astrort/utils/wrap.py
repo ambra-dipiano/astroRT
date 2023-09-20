@@ -31,6 +31,13 @@ def configure_simulator_no_visibility(simulator, configuration):
     simulator.fov = get_instrument_fov(configuration['array'])
     simulator.t = [0, configuration['duration']]
     simulator.seed = configuration['seed']
+    if configuration['pointing'] == 'random':
+        point = randomise_pointing(configuration)
+        simulator.ra = point['ra']
+        simulator.dec = point['dec']
+    else:
+        simulator.ra = configuration['pointing']['ra']
+        simulator.dec = configuration['pointing']['dec']
     return simulator
 
 def randomise_pointing(simulator):
