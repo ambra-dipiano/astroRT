@@ -7,5 +7,6 @@ dependencies:
   - matplotlib
   - pandas
   - pyyaml
+  - pytest
   - pip:
     - lxml
