@@ -39,6 +39,7 @@ def test_get_instrument_fov(array):
 @pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'cta', 'north', 'south'])
 def test_get_instrument_tev_range(array):
     erange = get_instrument_tev_range(array)
+    
     if array == 'lst':
         assert erange == [0.03, 5]
     elif array == 'mst':
