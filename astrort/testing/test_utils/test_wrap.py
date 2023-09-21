@@ -41,3 +41,5 @@ def test_get_point_source_info(test_conf_file):
     assert type(pointing['offset']) == type(np.float64(1))
     assert type(pointing['source_ra']) == type(np.float64(1))
     assert type(pointing['source_dec']) == type(np.float64(1))
+
+    

@@ -31,10 +31,19 @@ def configure_simulator_no_visibility(simulator, configuration):
     simulator.fov = get_instrument_fov(configuration['array'])
     simulator.t = [0, configuration['duration']]
     simulator.seed = configuration['seed']
-    simulator.ra = configuration['pointing']['ra']
-    simulator.dec = configuration['pointing']['dec']
     simulator.set_log = False
     return simulator
+
+def set_pointing(simulator, configuration, log):
+    if configuration['pointing'] == 'random':
+        log.info(f"Randomising pointing coordinates")
+        point = randomise_pointing_sim(configuration)
+    else:
+        log.info(f"Using fixed pointing coordinates")
+        point = get_point_source_info(configuration)
+    simulator.ra = point['point_ra']
+    simulator.dec = point['point_dec']
+    return simulator, point
 
 def randomise_pointing_sim(simulator):
     if '$TEMPLATES$' in simulator['model']:
@@ -63,10 +72,10 @@ def get_point_source_info(simulator):
     return {'point_ra': pointing.ra.deg, 'point_dec': pointing.dec.deg, 'offset': separation.value, 'source_ra': source.ra.deg, 'source_dec': source.dec.deg}
 
 def write_simulation_info(simulator, configuration, pointing, datfile):
-    name = configuration['simulator']['name']
+    name = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], '')
     seed = simulator.seed
     tstart, tstop = simulator.t
-    duration = configuration['simulator']['duration']
+    duration = configuration['duration']
     point_ra, point_dec, offset, source_ra, source_dec = pointing['point_ra'], pointing['point_dec'], pointing['offset'], pointing['source_ra'], pointing['source_dec']
     if not isfile(datfile):
         with open(datfile, 'w+') as f:
