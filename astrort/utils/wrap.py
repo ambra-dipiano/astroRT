@@ -33,6 +33,7 @@ def configure_simulator_no_visibility(simulator, configuration):
     simulator.seed = configuration['seed']
     simulator.ra = configuration['pointing']['ra']
     simulator.dec = configuration['pointing']['dec']
+    simulator.set_log = False
     return simulator
 
 def randomise_pointing_sim(simulator):
