@@ -8,14 +8,17 @@
 
 import argparse
 from os import makedirs
+from os.path import join
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
-from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility
+from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, randomise_pointing_sim, get_point_source_info
 from astrort.configure.logging import set_logger, get_log_level
 from astrort.configure.slurmjobs import make_sbatch
 
 def base_simulator(configuration_file):
     configuration = load_yaml_conf(configuration_file)
-    log = set_logger(get_log_level(configuration['logging']['level']))
+    logfile = join(configuration['simulator']['output'], configuration['logging']['logfile'])
+    datfile = configuration['logging']['logfile'].replace('.log', '.dat')
+    log = set_logger(get_log_level(configuration['logging']['level']), logfile)
     # create output dir
     log.info(f"Creating {configuration['simulator']['output']}")
     makedirs(configuration['simulator']['output'], exist_ok=True)
@@ -23,10 +26,20 @@ def base_simulator(configuration_file):
     log.info(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
     for i in range(configuration['simulator']['samples']):
         simulator = RTACtoolsSimulation()
+        # check pointing option
+        if configuration['simulator']['pointing'] == 'random':
+            log.info(f"Randomising pointing coordinates")
+            point = randomise_pointing_sim(configuration['simulator'])
+        else:
+            log.info(f"Using fixed pointing coordinates")
+            point = get_point_source_info(configuration['simulator'])
+        configuration['simulator']['pointing'] = {'ra': point['point_ra'], 'dec': point['point_dec']}
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'])
         simulator.run_simulation()
         log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete")
         configuration['simulator']['seed'] += 1
+        # save simulation data
+        write_simulation_info(simulator, configuration, point, datfile)
         del simulator
     # end simulations
     log.info(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
