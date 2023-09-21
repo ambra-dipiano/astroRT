@@ -6,7 +6,9 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *****************************************************************************
 
-from os.path import join
+import random
+from os import listdir
+from os.path import join, expandvars
 
 def seeds_to_string_formatter_files(samples, output, name, seed, ext):
     if samples <= 1e3:
@@ -51,3 +53,9 @@ def get_instrument_tev_range(array):
     else:
         erange = [0.03, 150]
     return erange
+
+def select_random_irf(array, prod):
+    path = join(expandvars('$CALDB'), f'data/cta/{prod}/bcf')
+    irfs = listdir(path)
+    irf = random.choice([i for i in irfs if array in i.lower()])
+    return join(path, irf)

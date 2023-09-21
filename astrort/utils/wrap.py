@@ -10,7 +10,7 @@ import yaml
 import numpy as np
 import astropy.units as u
 from os.path import dirname, abspath, join, basename, isfile
-from astrort.utils.utils import seeds_to_string_formatter_files, get_instrument_fov, seeds_to_string_formatter, get_instrument_tev_range
+from astrort.utils.utils import *
 from astrort.configure.check_configuration import CheckConfiguration
 from rtasci.lib.RTAManageXml import ManageXml
 from rtasci.lib.RTAUtils import check_energy_thresholds
@@ -28,7 +28,10 @@ def configure_simulator_no_visibility(simulator, configuration):
     simulator.model = configuration['model']
     simulator.output = seeds_to_string_formatter_files(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], 'fits')
     simulator.caldb = configuration['prod']
-    simulator.irf = configuration['irf']
+    if configuration['irf'] == 'random':
+        simulator.irf = select_random_irf(configuration['array'], configuration['prod'])
+    else:
+        simulator.irf = configuration['irf']
     simulator.fov = get_instrument_fov(configuration['array'])
     simulator.t = [0, configuration['duration']]
     simulator.e = check_energy_thresholds(get_instrument_tev_range(configuration['array']), configuration['irf'])
@@ -78,10 +81,11 @@ def write_simulation_info(simulator, configuration, pointing, datfile, clock):
     seed = simulator.seed
     tstart, tstop = simulator.t
     duration = configuration['duration']
+    irf = configuration['irf']
     point_ra, point_dec, offset, source_ra, source_dec = pointing['point_ra'], pointing['point_dec'], pointing['offset'], pointing['source_ra'], pointing['source_dec']
     if not isfile(datfile):
         with open(datfile, 'w+') as f:
-            f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset computation_time\n')
+            f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset irf computation_time\n')
     with open(datfile, 'a') as f:
-        f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset} {clock}\n')
+        f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset} {irf} {clock}\n')
     return
