@@ -72,5 +72,5 @@ def write_simulation_info(simulator, configuration, pointing, datfile):
         with open(datfile, 'w+') as f:
             f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset\n')
     with open(datfile, 'a') as f:
-        f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset}')
+        f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset}\n')
     return
