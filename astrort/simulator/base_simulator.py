@@ -17,7 +17,7 @@ from astrort.configure.slurmjobs import make_sbatch
 def base_simulator(configuration_file):
     configuration = load_yaml_conf(configuration_file)
     logfile = join(configuration['simulator']['output'], configuration['logging']['logfile'])
-    datfile = configuration['logging']['logfile'].replace('.log', '.dat')
+    datfile = logfile.replace('.log', '.dat')
     log = set_logger(get_log_level(configuration['logging']['level']), logfile)
     # create output dir
     log.info(f"Creating {configuration['simulator']['output']}")
