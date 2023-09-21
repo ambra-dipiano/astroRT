@@ -7,6 +7,7 @@
 # *****************************************************************************
 
 import argparse
+from time import time
 from os import makedirs
 from os.path import join
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
@@ -15,29 +16,36 @@ from astrort.configure.logging import set_logger, get_log_level
 from astrort.configure.slurmjobs import make_sbatch
 
 def base_simulator(configuration_file):
+    clock = time()
     configuration = load_yaml_conf(configuration_file)
     logfile = join(configuration['simulator']['output'], configuration['logging']['logfile'])
     datfile = logfile.replace('.log', '.dat')
     log = set_logger(get_log_level(configuration['logging']['level']), logfile)
+    log.info(f"Simulator configured, took {time() - clock} s")
     # create output dir
-    log.info(f"Creating {configuration['simulator']['output']}")
+    log.info(f"Output folder: {configuration['simulator']['output']}")
     makedirs(configuration['simulator']['output'], exist_ok=True)
     # start simulations
     log.info(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
     for i in range(configuration['simulator']['samples']):
+        clock_sim = time()
         simulator = RTACtoolsSimulation()
         # check pointing option
         simulator, point = set_pointing(simulator, configuration['simulator'], log)
         # complete configuration
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'])
+        log.debug(f"IRF [{configuration['simulator']['irf']}] > energy range: {simulator.e} TeV")
         simulator.run_simulation()
-        log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete")
+        log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete, took {time() - clock_sim} s")
         configuration['simulator']['seed'] += 1
+        # timing simulation
+        clock_sim = time() - clock_sim
         # save simulation data
-        write_simulation_info(simulator, configuration['simulator'], point, datfile)
+        write_simulation_info(simulator, configuration['simulator'], point, datfile, clock_sim)
         del simulator
     # end simulations
     log.info(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
+    log.info(f"Process complete, took {time() - clock} s")
 
 
 def slurm_submission(configuration_file, nodes):
