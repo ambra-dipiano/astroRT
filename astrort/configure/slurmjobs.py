@@ -12,6 +12,8 @@ from os.path import join, dirname, abspath
 
 def make_configuration(jobname_conf, configuration, node_number):
     configuration['simulator']['seed'] = node_number*configuration['simulator']['samples'] + 1
+    configuration['logging']['logfile'] = join(configuration['simulator']['output'], f'job_{node_number+1}.log')
+    configuration['logging']['datfile'] = join(configuration['simulator']['output'], f'job_{node_number+1}.dat')
     # write new configuration
     with open(jobname_conf, 'w+') as f:
         dump(configuration, f, default_flow_style=False)
