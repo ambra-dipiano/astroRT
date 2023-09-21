@@ -10,7 +10,7 @@ import yaml
 import numpy as np
 import astropy.units as u
 from os.path import dirname, abspath, join, basename, isfile
-from astrort.utils.utils import seeds_to_string_formatter, get_instrument_fov
+from astrort.utils.utils import seeds_to_string_formatter_files, get_instrument_fov, seeds_to_string_formatter
 from astrort.configure.check_configuration import CheckConfiguration
 from rtasci.lib.RTAManageXml import ManageXml
 from astropy.coordinates import SkyCoord 
@@ -25,7 +25,7 @@ def configure_simulator_no_visibility(simulator, configuration):
     if '$TEMPLATES$' in configuration['model']:
         configuration['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(configuration['model']))
     simulator.model = configuration['model']
-    simulator.output = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], 'fits')
+    simulator.output = seeds_to_string_formatter_files(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], 'fits')
     simulator.caldb = configuration['prod']
     simulator.irf = configuration['irf']
     simulator.fov = get_instrument_fov(configuration['array'])
@@ -72,7 +72,7 @@ def get_point_source_info(simulator):
     return {'point_ra': pointing.ra.deg, 'point_dec': pointing.dec.deg, 'offset': separation.value, 'source_ra': source.ra.deg, 'source_dec': source.dec.deg}
 
 def write_simulation_info(simulator, configuration, pointing, datfile):
-    name = seeds_to_string_formatter(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], '')
+    name = seeds_to_string_formatter(configuration['samples'], configuration['name'], configuration['seed'])
     seed = simulator.seed
     tstart, tstop = simulator.t
     duration = configuration['duration']

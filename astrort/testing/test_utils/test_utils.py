@@ -11,8 +11,8 @@ from astrort.utils.utils import *
 
 @pytest.mark.test_tmp_folder
 @pytest.mark.parametrize('samples', [3, 5, 8, 10])
-def test_seeds_to_string_formatter(samples, test_tmp_folder):
-    name = seeds_to_string_formatter(samples, test_tmp_folder, name='test', seed=1, ext='fits')
+def test_seeds_to_string_formatter_files(samples, test_tmp_folder):
+    name = seeds_to_string_formatter_files(samples, test_tmp_folder, name='test', seed=1, ext='fits')
 
     if samples <= 1e3:
         assert name == f"{test_tmp_folder}/test_001.fits"
@@ -22,6 +22,19 @@ def test_seeds_to_string_formatter(samples, test_tmp_folder):
         assert name == f"{test_tmp_folder}/test_00000001.fits"
     else:
         assert name == f"{test_tmp_folder}/test_1.fits"
+
+@pytest.mark.parametrize('samples', [3, 5, 8, 10])
+def test_seeds_to_string_formatter(samples):
+    name = seeds_to_string_formatter(samples, name='test', seed=1)
+
+    if samples <= 1e3:
+        assert name == f"test_001"
+    elif samples <= 1e5:
+        assert name == f"test_00001"
+    elif samples <= 1e8:
+        assert name == f"test_00000001"
+    else:
+        assert name == f"test_1"
 
 @pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'cta', 'north', 'south'])
 def test_get_instrument_fov(array):
