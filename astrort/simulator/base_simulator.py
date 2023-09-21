@@ -33,8 +33,7 @@ def base_simulator(configuration_file):
         # check pointing option
         simulator, point = set_pointing(simulator, configuration['simulator'], log)
         # complete configuration
-        simulator = configure_simulator_no_visibility(simulator, configuration['simulator'])
-        log.debug(f"IRF [{configuration['simulator']['irf']}] > energy range: {simulator.e} TeV")
+        simulator = configure_simulator_no_visibility(simulator, configuration['simulator'], log)
         simulator.run_simulation()
         log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete, took {time() - clock_sim} s")
         configuration['simulator']['seed'] += 1

@@ -7,6 +7,7 @@
 # *****************************************************************************
 
 import pytest
+from os.path import isdir
 from astrort.utils.utils import *
 
 @pytest.mark.test_tmp_folder
@@ -64,6 +65,9 @@ def test_get_instrument_tev_range(array):
 
 @pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'north', 'south'])
 def test_select_irf(array):
-    irf = select_random_irf(array, 'prod5-v0.1')
+    prod = 'prod5-v0.1'
+    path = join(expandvars('$CALDB'), f'data/cta/{prod}/bcf')
+    irf = select_random_irf(array, prod)
     assert array in irf.lower()
-    assert 'share/caldb/data/cta' in irf.lower()
+    assert 'share/caldb/data/cta' in join(path, irf).lower()
+    assert isdir(join(path, irf)) is True

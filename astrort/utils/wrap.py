@@ -22,7 +22,7 @@ def load_yaml_conf(yamlfile):
         CheckConfiguration(configuration=configuration)
     return configuration
 
-def configure_simulator_no_visibility(simulator, configuration):
+def configure_simulator_no_visibility(simulator, configuration, log):
     if '$TEMPLATES$' in configuration['model']:
         configuration['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(configuration['model']))
     simulator.model = configuration['model']
@@ -30,21 +30,22 @@ def configure_simulator_no_visibility(simulator, configuration):
     simulator.caldb = configuration['prod']
     if configuration['irf'] == 'random':
         simulator.irf = select_random_irf(configuration['array'], configuration['prod'])
+        log.info(f"Randomising instrument response function [{simulator.irf}]")
     else:
         simulator.irf = configuration['irf']
     simulator.fov = get_instrument_fov(configuration['array'])
     simulator.t = [0, configuration['duration']]
-    simulator.e = check_energy_thresholds(get_instrument_tev_range(configuration['array']), configuration['irf'])
+    simulator.e = adjust_tev_range_to_irf(get_instrument_tev_range(configuration['array']), simulator.irf)
+    log.info(f"Verified energy range {simulator.e}")
     simulator.seed = configuration['seed']
     simulator.set_log = False
     return simulator
 
 def set_pointing(simulator, configuration, log):
     if configuration['pointing'] == 'random':
-        log.info(f"Randomising pointing coordinates")
         point = randomise_pointing_sim(configuration)
+        log.info(f"Randomising pointing coordinates [{point['point_ra']}, {point['point_dec']}]")
     else:
-        log.info(f"Using fixed pointing coordinates")
         point = get_point_source_info(configuration)
     simulator.ra = point['point_ra']
     simulator.dec = point['point_dec']

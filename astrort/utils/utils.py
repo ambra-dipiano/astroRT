@@ -54,8 +54,18 @@ def get_instrument_tev_range(array):
         erange = [0.03, 150]
     return erange
 
+def adjust_tev_range_to_irf(erange, irf):
+    # minimum energy
+    if "z60" in irf and erange[0] < 0.11:
+        erange[0] = 0.11
+    elif "z40" in irf and erange[0] < 0.04:
+        erange[0] = 0.04
+    elif "z20" in irf and erange[0] < 0.03:
+        erange[0] = 0.03
+    return erange
+
 def select_random_irf(array, prod):
     path = join(expandvars('$CALDB'), f'data/cta/{prod}/bcf')
     irfs = listdir(path)
     irf = random.choice([i for i in irfs if array in i.lower()])
-    return join(path, irf)
+    return irf
