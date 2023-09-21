@@ -10,7 +10,7 @@ import argparse
 from os import makedirs
 from os.path import join
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
-from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, randomise_pointing_sim, get_point_source_info
+from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing
 from astrort.configure.logging import set_logger, get_log_level
 from astrort.configure.slurmjobs import make_sbatch
 
@@ -27,19 +27,14 @@ def base_simulator(configuration_file):
     for i in range(configuration['simulator']['samples']):
         simulator = RTACtoolsSimulation()
         # check pointing option
-        if configuration['simulator']['pointing'] == 'random':
-            log.info(f"Randomising pointing coordinates")
-            point = randomise_pointing_sim(configuration['simulator'])
-        else:
-            log.info(f"Using fixed pointing coordinates")
-            point = get_point_source_info(configuration['simulator'])
-        configuration['simulator']['pointing'] = {'ra': point['point_ra'], 'dec': point['point_dec']}
+        simulator, point = set_pointing(simulator, configuration['simulator'], log)
+        # complete configuration
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'])
         simulator.run_simulation()
         log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete")
         configuration['simulator']['seed'] += 1
         # save simulation data
-        write_simulation_info(simulator, configuration, point, datfile)
+        write_simulation_info(simulator, configuration['simulator'], point, datfile)
         del simulator
     # end simulations
     log.info(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
