@@ -63,11 +63,23 @@ def test_get_instrument_tev_range(array):
     else:
         assert erange == [0.03, 150]
 
+@pytest.mark.parametrize('zenith', ['irf_z60', 'irf_z40', 'irf_z20'])
+def test_adjust_tev_range_to_irf(zenith):
+    erange = adjust_tev_range_to_irf([0.03, 150], zenith)
+    
+    if 'z60' in zenith:
+        assert erange[0] == 0.11
+    elif 'z60' in zenith:
+        assert erange[0] == 0.04
+    elif 'z20' in zenith:
+        assert erange[0] == 0.03
+
 @pytest.mark.parametrize('array', ['lst', 'mst', 'sst', 'north', 'south'])
 def test_select_irf(array):
     prod = 'prod5-v0.1'
     path = join(expandvars('$CALDB'), f'data/cta/{prod}/bcf')
     irf = select_random_irf(array, prod)
+
     assert array in irf.lower()
     assert 'share/caldb/data/cta' in join(path, irf).lower()
     assert isdir(join(path, irf)) is True
