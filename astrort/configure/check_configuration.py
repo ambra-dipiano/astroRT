@@ -45,10 +45,11 @@ class CheckConfiguration():
         return self
 
     def check_logging(self):
-        keys = ['level', 'logfile']
+        keys = ['level', 'logfile', 'datfile']
         assert self.conf['logging'].keys() == keys
         assert (type(self.conf['logging']['level']) == str or type(self.conf['logging']['level']) == int) 
         assert type(self.conf['logging']['logfile']) == str 
+        assert type(self.conf['logging']['datfile']) == str 
         return self
     
     def check_slurm(self):

@@ -15,7 +15,8 @@ visibility:
 
 logging:
   level: CRITICAL
-  logfile:
+  logfile: test.log
+  datfile: test.dat
 
 slurm:
   nodes: 5
