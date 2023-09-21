@@ -8,7 +8,7 @@
 
 import logging
 from os import makedirs
-from os.path import isdir, dirname
+from os.path import isdir, dirname, isfile
 
 def set_logger(level, filename=None):
     log = logging.getLogger()
@@ -22,6 +22,9 @@ def set_logger(level, filename=None):
     if filename is not None:
         if not isdir(dirname(filename)):
             makedirs(dirname(filename))
+        if not isfile(filename):
+            f = open(filename, 'w+')
+            f.close()
         fileHandler = logging.FileHandler(filename)
         fileHandler.setFormatter(formatter)
         log.addHandler(fileHandler)
