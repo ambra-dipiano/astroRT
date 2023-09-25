@@ -18,7 +18,7 @@ from astrort.configure.slurmjobs import make_simulator_sbatch
 def base_simulator(configuration_file):
     clock = time()
     configuration = load_yaml_conf(configuration_file)
-    logfile = join(configuration['simulator']['output'], configuration['logging']['logfile'])
+    logfile = join(configuration['simulator']['output'], 'simulator_' + configuration['logging']['logfile'])
     datfile = logfile.replace('.log', '.dat')
     log = set_logger(get_log_level(configuration['logging']['level']), logfile)
     log.info(f"Simulator configured, took {time() - clock} s")
