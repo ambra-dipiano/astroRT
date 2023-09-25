@@ -67,11 +67,12 @@ class CheckConfiguration():
         return self
     
     def check_mapper(self):
-        keys = ['exposure', 'smooth', 'center', 'region', 'output']
+        keys = ['exposure', 'smooth', 'center', 'plot', 'region', 'output']
         assert self.conf['mapper'].keys() == keys
         assert type(self.conf['mapper']['exposure']) == int
         assert type(self.conf['mapper']['smooth']) == (float or int)
         assert type(self.conf['mapper']['center']) in ['pointing', 'source'] 
+        assert type(self.conf['mapper']['plot']) == bool
         assert type(self.conf['mapper']['region']) == bool
         assert type(self.conf['mapper']['output']) == str
         return self

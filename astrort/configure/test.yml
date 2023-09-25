@@ -14,6 +14,7 @@ mapper:
   exposure: 10
   smooth: 1
   center: pointing
+  plot: false
   region: false
   output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
 
