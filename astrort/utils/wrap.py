@@ -92,7 +92,7 @@ def write_simulation_info(simulator, configuration, pointing, datfile, clock):
 
 def merge_simulation_info(configuration, log):
     folder = configuration['output']
-    datfiles = [join(folder, f) for f in listdir(folder) if '.dat' in f and 'job' in f]
+    datfiles = [join(folder, f) for f in listdir(folder) if '.dat' in f and 'job' in f and 'simulator' in f]
     merger = join(folder, 'merged_sim_data.dat')
     # check merger file
     if isfile(merger):

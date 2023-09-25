@@ -50,7 +50,7 @@ def test_write_simulation_info(test_conf_file):
     conf = load_yaml_conf(test_conf_file)
     conf['simulator']['pointing'] = {'ra': 1, 'dec': 1}
     pointing = get_point_source_info(conf['simulator'])
-    datfile = join(conf['simulator']['output'], 'tmp.dat')
+    datfile = join(conf['simulator']['output'], 'simulator.dat')
     sim = RTACtoolsSimulation()
     clock = 1
     write_simulation_info(sim, conf['simulator'], pointing, datfile, clock)
@@ -67,7 +67,7 @@ def test_merge_simulation_info(test_conf_file, test_tmp_folder):
     clock = 1
     for i in range(5):
         sim.seed = i
-        datfile = join(conf['simulator']['output'], f'job_{i}.dat')
+        datfile = join(conf['simulator']['output'], f'job_{i}_simulator.dat')
         write_simulation_info(sim, conf['simulator'], pointing, datfile, clock)
         assert isfile(datfile)
     

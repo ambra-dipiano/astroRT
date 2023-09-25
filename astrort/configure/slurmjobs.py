@@ -10,12 +10,12 @@ from yaml import dump
 from os import system
 from os.path import join, dirname, abspath
 
-def make_configuration(jobname_conf, configuration, node_number):
+def make_simulator_conf(jobname_conf, configuration, node_number):
     # simulator
     configuration['simulator']['seed'] = node_number*configuration['simulator']['samples'] + 1
     # logging
-    configuration['logging']['logfile'] = join(configuration['simulator']['output'], f'job_{node_number+1}.log')
-    configuration['logging']['datfile'] = join(configuration['simulator']['output'], f'job_{node_number+1}.dat')
+    configuration['logging']['logfile'] = join(configuration['simulator']['output'], f'job_{node_number+1}_simulator.log')
+    configuration['logging']['datfile'] = join(configuration['simulator']['output'], f'job_{node_number+1}_simulator.dat')
     # write new configuration
     with open(jobname_conf, 'w+') as f:
         dump(configuration, f, default_flow_style=False)
@@ -41,7 +41,12 @@ def make_simulator_sbatch(jobname, configuration, node_number):
     jobname_sh = join(output, f"{jobname}.sh")
     jobname_log = join(output, f"{jobname}.slurm")
     jobname_conf = join(output, f"{jobname}.yml")
-    make_configuration(jobname_conf, configuration, node_number)
+    make_simulator_conf(jobname_conf, configuration, node_number)
     make_simulator_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
     system(f"sbatch {jobname_sh}")
     
+def make_mapper_sh():
+    return
+
+def make_mapper_sbatch():
+    return

@@ -10,11 +10,11 @@ import pytest
 from shutil import rmtree
 from os import listdir, makedirs
 from os.path import isfile, join
-from astrort.configure.slurmjobs import make_configuration, make_simulator_sh, make_simulator_sbatch
+from astrort.configure.slurmjobs import make_simulator_conf, make_simulator_sh, make_simulator_sbatch
 from astrort.utils.wrap import load_yaml_conf
 
 @pytest.mark.test_conf_file
-def test_make_configuration(test_conf_file):
+def test_make_simulator_conf(test_conf_file):
 
     # clean output
     conf = load_yaml_conf(test_conf_file)
@@ -26,7 +26,7 @@ def test_make_configuration(test_conf_file):
         node_number += 1
         jobname = f"{conf['slurm']['name']}_{node_number}"       
         jobname_conf = join(conf['simulator']['output'], f"job_{jobname}.yml")
-        make_configuration(jobname_conf, conf, node_number)
+        make_simulator_conf(jobname_conf, conf, node_number)
     
     # check output
     expected_configurations = conf['slurm']['nodes']
