@@ -8,12 +8,12 @@
 
 import yaml
 import numpy as np
+import pandas as pd
 import astropy.units as u
 from os.path import dirname, abspath, join, basename, isfile
 from astrort.utils.utils import *
 from astrort.configure.check_configuration import CheckConfiguration
 from rtasci.lib.RTAManageXml import ManageXml
-from rtasci.lib.RTAUtils import check_energy_thresholds
 from astropy.coordinates import SkyCoord 
 
 def load_yaml_conf(yamlfile):
@@ -89,4 +89,27 @@ def write_simulation_info(simulator, configuration, pointing, datfile, clock):
             f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset irf computation_time\n')
     with open(datfile, 'a') as f:
         f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset} {irf} {clock}\n')
+
+def merge_simulation_info(configuration, log):
+    folder = configuration['output']
+    datfiles = [join(folder, f) for f in listdir(folder) if '.dat' in f and 'job' in f]
+    merger = join(folder, 'merged_sim_data.dat')
+    # check merger file
+    if isfile(merger):
+        log.warning(f"Merger output already exists, overwrite {merger}")
+        with open(merger, 'w+') as f:
+            f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset irf computation_time\n')
+    # collect data
+    for i, datfile in enumerate(datfiles):
+        log.info(f"Collect data from {datfile}")
+        data = pd.read_csv(join(datfile), sep=' ')
+        if i == 0:
+            table = data
+        else:
+            table = pd.concat([table, data], ignore_index=True)
+        log.info(f"Lines in data: {len(table)}")
+    # write merger file
+    table.to_csv(merger, index=False, header=True, sep=' ', na_rep=np.nan)
+
+def write_mapping_info():
     return
