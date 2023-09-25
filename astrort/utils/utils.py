@@ -7,6 +7,7 @@
 # *****************************************************************************
 
 import random
+import numpy as np
 from os import listdir
 from os.path import join, expandvars
 
@@ -69,3 +70,9 @@ def select_random_irf(array, prod):
     irfs = listdir(path)
     irf = random.choice([i for i in irfs if array in i.lower()])
     return irf
+
+def get_all_seeds(simulator):
+    start_seed = simulator['seed']
+    samples = simulator['samples']
+    seeds = np.arange(start_seed, samples+start_seed, step=1)
+    return seeds

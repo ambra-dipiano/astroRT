@@ -7,8 +7,10 @@
 # *****************************************************************************
 
 import pytest
+import numpy as np
 from os.path import isdir
 from astrort.utils.utils import *
+from astrort.utils.wrap import *
 
 @pytest.mark.test_tmp_folder
 @pytest.mark.parametrize('samples', [3, 5, 8, 10])
@@ -83,3 +85,9 @@ def test_select_irf(array):
     assert array in irf.lower()
     assert 'share/caldb/data/cta' in join(path, irf).lower()
     assert isdir(join(path, irf)) is True
+
+@pytest.mark.test_conf_file
+def test_get_all_seeds(test_conf_file):
+    conf = load_yaml_conf(test_conf_file)
+    seeds = get_all_seeds(conf['simulator'])
+    assert seeds.all() == np.array([1, 2]).all()
