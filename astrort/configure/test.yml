@@ -10,6 +10,13 @@ simulator:
   model: $TEMPLATES$/crab.xml
   output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
   
+mapper:
+  exposure: 10
+  smooth: 1
+  center: pointing
+  region: false
+  output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
+
 visibility:
   start_time: '2030-01-01T00:00:00'
 
