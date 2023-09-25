@@ -10,7 +10,7 @@ import pytest
 from shutil import rmtree
 from os import listdir, makedirs
 from os.path import isfile, join
-from astrort.configure.slurmjobs import make_simulator_conf, make_simulator_sh, make_simulator_sbatch
+from astrort.configure.slurmjobs import make_simulator_conf, make_sh, make_simulator_sbatch
 from astrort.utils.wrap import load_yaml_conf
 
 @pytest.mark.test_conf_file
@@ -34,7 +34,7 @@ def test_make_simulator_conf(test_conf_file):
     assert found_configurations == expected_configurations, f"Expected {expected_configurations} simulations, found {found_configurations}"
 
 @pytest.mark.test_conf_file
-def test_make_simulator_sh(test_conf_file):
+def test_make_sh(test_conf_file):
 
     # clean output
     conf = load_yaml_conf(test_conf_file)
@@ -49,7 +49,7 @@ def test_make_simulator_sh(test_conf_file):
         jobname_sh = join(output, f"job_{jobname}.sh")
         jobname_log = join(output, f"job_{jobname}.log")
         jobname_conf = join(output, f"job_{jobname}.yml")
-        make_simulator_sh(jobname, conf['slurm'], jobname_conf, jobname_sh, jobname_log)
+        make_sh(jobname, conf['slurm'], jobname_conf, jobname_sh, jobname_log, mode='simulator')
 
     # check output
     expected_sh = conf['slurm']['nodes']

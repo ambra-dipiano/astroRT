@@ -20,7 +20,7 @@ def make_simulator_conf(jobname_conf, configuration, node_number):
     with open(jobname_conf, 'w+') as f:
         dump(configuration, f, default_flow_style=False)
 
-def make_simulator_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log):
+def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log, mode='simulator'):
     # write sbatch
     with open(jobname_sh, 'w+') as f:
         f.write("#!/bin/bash")
@@ -34,15 +34,18 @@ def make_simulator_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log)
         f.write(f"\n#SBATCH --partition={slurmconf['partition']}")
         f.write(f"\n")
         f.write(f"\nsource activate {slurmconf['environment']}")
-        f.write(f"\npython {join(dirname(abspath(__file__)).replace('configure', 'simulator'), 'base_simulator.py')} -f {jobname_conf}\n")
+        if mode == 'simulator':
+            f.write(f"\npython {join(dirname(abspath(__file__)).replace('configure', 'simulator'), 'base_simulator.py')} -f {jobname_conf}\n")
+        else:
+            raise ValueError(f"Invalid 'mode' {mode}")
 
 def make_simulator_sbatch(jobname, configuration, node_number):
     output = configuration['simulator']['output']
-    jobname_sh = join(output, f"{jobname}.sh")
-    jobname_log = join(output, f"{jobname}.slurm")
-    jobname_conf = join(output, f"{jobname}.yml")
-    make_simulator_conf(jobname_conf, configuration, node_number)
-    make_simulator_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
+    jobname_sh = join(output, f"{jobname}_simulator.sh")
+    jobname_log = join(output, f"{jobname}_simulator.slurm")
+    jobname_conf = join(output, f"{jobname}_simulator.yml")
+    make_simulator_conf(jobname_conf, configuration, node_number, mode='simulator')
+    make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
     system(f"sbatch {jobname_sh}")
     
 def make_mapper_sh():
