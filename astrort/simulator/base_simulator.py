@@ -36,11 +36,11 @@ def base_simulator(configuration_file):
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'], log)
         simulator.run_simulation()
         log.info(f"Simulation (seed = {configuration['simulator']['seed']}) complete, took {time() - clock_sim} s")
-        configuration['simulator']['seed'] += 1
         # timing simulation
         clock_sim = time() - clock_sim
         # save simulation data
         write_simulation_info(simulator, configuration['simulator'], point, datfile, clock_sim)
+        configuration['simulator']['seed'] += 1
         del simulator
     # end simulations
     log.info(f"\n {'-'*17} \n| STOP SIMULATOR | \n {'-'*17} \n")
