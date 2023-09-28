@@ -13,6 +13,7 @@ simulator:
 mapper:
   exposure: 10
   smooth: 1
+  pixelsize: 0.02
   center: pointing
   plot: false
   region: false
