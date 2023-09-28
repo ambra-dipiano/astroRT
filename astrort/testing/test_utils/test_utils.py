@@ -91,3 +91,6 @@ def test_get_all_seeds(test_conf_file):
     conf = load_yaml_conf(test_conf_file)
     seeds = get_all_seeds(conf['simulator'])
     assert seeds.all() == np.array([1, 2]).all()
+
+def test_map_template():
+    assert map_template() == join(dirname(abspath(__file__)).replace('testing/test_utils', 'templates'), 'base_empty_map.fits')

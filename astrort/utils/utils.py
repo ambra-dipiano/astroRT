@@ -9,9 +9,12 @@
 import random
 import numpy as np
 from os import listdir
-from os.path import join, expandvars
+from os.path import join, expandvars, dirname, abspath
 
-def seeds_to_string_formatter_files(samples, output, name, seed, ext):
+def map_template():
+    return join(dirname(abspath(__file__)).replace('utils', 'templates'), 'base_empty_map.fits')
+
+def seeds_to_string_formatter_files(samples, output, name, seed, ext, suffix=None):
     if samples <= 1e3:
         name = join(output, f"{name}_{seed:03d}.{ext}")
     elif samples <= 1e5:
@@ -20,6 +23,9 @@ def seeds_to_string_formatter_files(samples, output, name, seed, ext):
         name = join(output, f"{name}_{seed:08d}.{ext}")
     else:
         name = join(output, f"{name}_{seed}.{ext}")
+    # suffix
+    if suffix is not None:
+        name.replace(f'.{ext}', f'_{suffix}.{ext}')
     return name
 
 def seeds_to_string_formatter(samples, name, seed):
