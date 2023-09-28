@@ -11,16 +11,25 @@ import numpy as np
 import pandas as pd
 import astropy.units as u
 from os.path import dirname, abspath, join, basename, isfile
-from astrort.utils.utils import *
-from astrort.configure.check_configuration import CheckConfiguration
 from rtasci.lib.RTAManageXml import ManageXml
 from astropy.coordinates import SkyCoord 
+from astrort.utils.utils import *
+from astrort.configure.check_configuration import CheckConfiguration
+from astrort.utils.mapping import Mapper
 
 def load_yaml_conf(yamlfile):
     with open(yamlfile) as f:
         configuration = yaml.load(f, Loader=yaml.FullLoader)
         CheckConfiguration(configuration=configuration)
     return configuration
+
+def execute_mapper_no_visibility(configuration, log):
+    phlist = seeds_to_string_formatter_files(configuration['simulator']['samples'], configuration['simulator']['output'], configuration['simulator']['name'], configuration['simulator']['seed'], 'fits')
+    skymap = phlist.replace('.fits', '_map.fits')
+    maproi = get_instrument_fov(configuration['simulator']['array'])
+    mapper = Mapper(log)
+    mapper.get_countmap_in_fits(dl3_file=phlist, fitsname=skymap, template=map_template(), maproi=maproi, pixelsize=configuration['mapper']['pixelsize'], trange=[0, configuration['mapper']['exposure']], sigma=configuration['mapper']['smooth'])
+    del mapper
 
 def configure_simulator_no_visibility(simulator, configuration, log):
     if '$TEMPLATES$' in configuration['model']:
@@ -111,5 +120,15 @@ def merge_simulation_info(configuration, log):
     # write merger file
     table.to_csv(merger, index=False, header=True, sep=' ', na_rep=np.nan)
 
-def write_mapping_info():
-    return
+def write_mapping_info(configuration, datfile, clock):
+    name = seeds_to_string_formatter(configuration['simulator']['samples'], configuration['simulator']['name'], configuration['simulator']['seed'])
+    seed = configuration['simulator']['seed']
+    exposure = configuration['mapper']['exposure']
+    center_type = configuration['mapper']['center']  
+    pixelsize = configuration['mapper']['pixelsize']
+    smooth = configuration['mapper']['smooth']
+    if not isfile(datfile):
+        with open(datfile, 'w+') as f:
+            f.write('name seed exposure center_on pixelsize smooth computation_time\n')
+    with open(datfile, 'a') as f:
+        f.write(f'{name} {seed} {exposure} {center_type} {pixelsize} {smooth} {clock}\n')

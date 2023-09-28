@@ -9,8 +9,11 @@
 import pytest
 import logging
 import numpy as np
+from shutil import rmtree
 from astrort.utils.wrap import *
+from astrort.utils.utils import seeds_to_string_formatter_files
 from astrort.configure.logging import set_logger
+from astrort.simulator.base_simulator import base_simulator
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
 
 @pytest.mark.test_conf_file
@@ -76,8 +79,39 @@ def test_merge_simulation_info(test_conf_file, test_tmp_folder):
     assert isfile(join(conf['simulator']['output'], 'merged_sim_data.dat'))
     del sim
 
-def test_write_mapping_info():
-    return
+@pytest.mark.test_conf_file
+def test_write_mapping_info(test_conf_file):
+    conf = load_yaml_conf(test_conf_file)
+    conf['simulator']['pointing'] = {'ra': 1, 'dec': 1}
+    datfile = join(conf['simulator']['output'], 'simulator.dat')
+    clock = 1
+    write_mapping_info(conf, datfile, clock)
+    assert isfile(datfile)
 
-
+@pytest.mark.test_conf_file
+def test_configure_simulator_no_visibility(test_conf_file):
+    conf = load_yaml_conf(test_conf_file)
+    conf['simulator']['pointing'] = {'ra': 1, 'dec': 1}
+    log = set_logger(logging.CRITICAL)
+    sim = RTACtoolsSimulation()
+    sim = configure_simulator_no_visibility(sim, conf['simulator'], log)
     
+    assert sim.t == [0, conf['simulator']['duration']]
+    assert sim.seed == conf['simulator']['seed']
+    assert sim.set_log is False
+    assert sim.caldb == conf['simulator']['prod']
+    del sim
+
+@pytest.mark.test_conf_file
+def test_execute_mapper_no_visibility(test_conf_file):
+    # clean output
+    conf = load_yaml_conf(test_conf_file)
+    rmtree(conf['simulator']['output'])
+    conf['simulator']['samples']
+    log = set_logger(logging.CRITICAL)
+
+    # run simulator
+    base_simulator(test_conf_file)
+    execute_mapper_no_visibility(conf, log)
+    mapfile = seeds_to_string_formatter_files(conf['simulator']['samples'], conf['simulator']['output'], conf['simulator']['name'], conf['simulator']['seed'], 'fits', suffix='map')
+    assert isfile(mapfile)
