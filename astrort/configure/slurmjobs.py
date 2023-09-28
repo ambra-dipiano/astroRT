@@ -51,5 +51,12 @@ def make_simulator_sbatch(jobname, configuration, node_number):
 def make_mapper_sh():
     return
 
-def make_mapper_sbatch():
+def make_mapper_sbatch(jobname, configuration, node_number):
+    output = configuration['simulator']['output']
+    jobname_sh = join(output, f"{jobname}_simulator.sh")
+    jobname_log = join(output, f"{jobname}_simulator.slurm")
+    jobname_conf = join(output, f"{jobname}_simulator.yml")
+    make_simulator_conf(jobname_conf, configuration, node_number, mode='simulator')
+    make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
+    system(f"sbatch {jobname_sh}")
     return

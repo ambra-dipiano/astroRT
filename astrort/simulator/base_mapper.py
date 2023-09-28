@@ -47,6 +47,16 @@ def base_mapper(configuration_file, seeds=None):
     log.info(f"Process complete, took {time() - clock} s")
 
 def slurm_submission(configuration_file, nodes):
+    configuration = load_yaml_conf(configuration_file)
+    log = set_logger(get_log_level(configuration['logging']['level']))
+    # create output dir
+    log.info(f"Creating {configuration['simulator']['output']}")
+    makedirs(configuration['simulator']['output'], exist_ok=True)
+    # sbatch jobs per each nodes
+    configuration['slurm']['nodes'] = nodes
+    for node_number in range(configuration['slurm']['nodes']):
+        jobname = f"{configuration['slurm']['name']}_{node_number+1}"
+        make_mapper_sbatch(jobname, configuration, node_number)
     return
 
 
