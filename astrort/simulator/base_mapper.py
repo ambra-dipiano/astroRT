@@ -13,7 +13,7 @@ from os.path import join
 from astrort.utils.wrap import load_yaml_conf, write_mapping_info, execute_mapper_no_visibility
 from astrort.utils.utils import get_all_seeds
 from astrort.configure.logging import set_logger, get_log_level
-from astrort.configure.slurmjobs import make_mapper_sbatch
+from astrort.configure.slurmjobs import slurm_submission
 
 def base_mapper(configuration_file, seeds=None):
     clock = time()
@@ -46,25 +46,11 @@ def base_mapper(configuration_file, seeds=None):
     log.info(f"\n {'-'*15} \n| STOP MAPPER | \n {'-'*15} \n")
     log.info(f"Process complete, took {time() - clock} s")
 
-def slurm_submission(configuration_file, nodes):
-    configuration = load_yaml_conf(configuration_file)
-    log = set_logger(get_log_level(configuration['logging']['level']))
-    # create output dir
-    log.info(f"Creating {configuration['simulator']['output']}")
-    makedirs(configuration['simulator']['output'], exist_ok=True)
-    # sbatch jobs per each nodes
-    configuration['slurm']['nodes'] = nodes
-    for node_number in range(configuration['slurm']['nodes']):
-        jobname = f"{configuration['slurm']['name']}_{node_number+1}"
-        make_mapper_sbatch(jobname, configuration, node_number)
-    return
-
-
 def main(configuration, nodes):
     if nodes == 0:
         base_mapper()(configuration)
     else:
-        slurm_submission(configuration, nodes)
+        slurm_submission(configuration, nodes, mode='mapper')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')

@@ -7,8 +7,10 @@
 # *****************************************************************************
 
 from yaml import dump
-from os import system
+from os import system, makedirs
 from os.path import join, dirname, abspath
+from astrort.utils.wrap import load_yaml_conf
+from astrort.configure.logging import set_logger, get_log_level
 
 def make_configuration(jobname_conf, configuration, node_number):
     # simulator
@@ -41,21 +43,23 @@ def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log, mode='sim
         else:
             raise ValueError(f"Invalid 'mode' {mode}")
 
-def make_simulator_sbatch(jobname, configuration, node_number):
-    output = configuration['simulator']['output']
-    jobname_sh = join(output, f"{jobname}_simulator.sh")
-    jobname_log = join(output, f"{jobname}_simulator.slurm")
-    jobname_conf = join(output, f"{jobname}_simulator.yml")
-    make_configuration(jobname_conf, configuration, node_number, mode='simulator')
+def make_sbatch(jobname, configuration, node_number, mode):
+    output = configuration[mode]['output']
+    jobname_sh = join(output, f"{jobname}_{mode}.sh")
+    jobname_log = join(output, f"{jobname}_{mode}.slurm")
+    jobname_conf = join(output, f"{jobname}_{mode}.yml")
+    make_configuration(jobname_conf, configuration, node_number, mode=mode)
     make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
     system(f"sbatch {jobname_sh}")
-    
-def make_mapper_sbatch(jobname, configuration, node_number):
-    output = configuration['mapper']['output']
-    jobname_sh = join(output, f"{jobname}_mapper.sh")
-    jobname_log = join(output, f"{jobname}_mapper.slurm")
-    jobname_conf = join(output, f"{jobname}_mapper.yml")
-    make_configuration(jobname_conf, configuration, node_number, mode='mapper')
-    make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
-    system(f"sbatch {jobname_sh}")
-    return
+
+def slurm_submission(configuration_file, nodes, mode):
+    configuration = load_yaml_conf(configuration_file)
+    log = set_logger(get_log_level(configuration['logging']['level']))
+    # create output dir
+    log.info(f"Creating {configuration['simulator']['output']}")
+    makedirs(configuration['simulator']['output'], exist_ok=True)
+    # sbatch jobs per each nodes
+    configuration['slurm']['nodes'] = nodes
+    for node_number in range(configuration['slurm']['nodes']):
+        jobname = f"{configuration['slurm']['name']}_{node_number+1}"
+        make_sbatch(jobname, configuration, node_number, mode=mode)
