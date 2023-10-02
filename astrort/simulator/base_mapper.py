@@ -12,13 +12,13 @@ from os import makedirs
 from os.path import join
 from astrort.utils.wrap import load_yaml_conf, write_mapping_info, execute_mapper_no_visibility
 from astrort.utils.utils import get_all_seeds
-from astrort.configure.logging import set_logger, get_log_level
+from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
 
 def base_mapper(configuration_file, seeds=None):
     clock = time()
     configuration = load_yaml_conf(configuration_file)
-    logfile = join(configuration['mapper']['output'], 'mapper_' + configuration['logging']['logfile'])
+    logfile = get_logfile(configuration, mode='mapper')
     datfile = logfile.replace('.log', '.dat')
     # set logger
     log = set_logger(get_log_level(configuration['logging']['level']), logfile)
@@ -48,7 +48,7 @@ def base_mapper(configuration_file, seeds=None):
 
 def main(configuration, nodes):
     if nodes == 0:
-        base_mapper()(configuration)
+        base_mapper(configuration)
     else:
         slurm_submission(configuration, nodes, mode='mapper')
 

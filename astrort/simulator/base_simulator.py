@@ -8,23 +8,21 @@
 
 import argparse
 from time import time
-from os import makedirs
-from os.path import join
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
 from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing
-from astrort.configure.logging import set_logger, get_log_level
+from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
 
 def base_simulator(configuration_file):
     clock = time()
     configuration = load_yaml_conf(configuration_file)
-    logfile = join(configuration['simulator']['output'], 'simulator_' + configuration['logging']['logfile'])
+    logfile = get_logfile(configuration, mode='simulator')
     datfile = logfile.replace('.log', '.dat')
     log = set_logger(get_log_level(configuration['logging']['level']), logfile)
     log.info(f"Simulator configured, took {time() - clock} s")
     # create output dir
     log.info(f"Output folder: {configuration['simulator']['output']}")
-    makedirs(configuration['simulator']['output'], exist_ok=True)
+    #makedirs(configuration['simulator']['output'], exist_ok=True)
     # start simulations
     log.info(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
     for i in range(configuration['simulator']['samples']):

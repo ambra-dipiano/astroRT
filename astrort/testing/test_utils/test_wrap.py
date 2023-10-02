@@ -106,7 +106,7 @@ def test_configure_simulator_no_visibility(test_conf_file):
 def test_execute_mapper_no_visibility(test_conf_file):
     # clean output
     conf = load_yaml_conf(test_conf_file)
-    rmtree(conf['simulator']['output'])
+    rmtree(conf['mapper']['output'], ignore_errors=True)
     conf['simulator']['samples']
     log = set_logger(logging.CRITICAL)
 

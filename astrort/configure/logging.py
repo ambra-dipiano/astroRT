@@ -8,7 +8,7 @@
 
 import logging
 from os import makedirs
-from os.path import isdir, dirname, isfile
+from os.path import dirname, isfile, join
 
 def set_logger(level, filename=None):
     log = logging.getLogger()
@@ -20,8 +20,7 @@ def set_logger(level, filename=None):
     log.addHandler(consoleHandler)
     # file logger
     if filename is not None:
-        if not isdir(dirname(filename)):
-            makedirs(dirname(filename))
+        makedirs(dirname(filename), exist_ok=True)
         if not isfile(filename):
             f = open(filename, 'w+')
             f.close()
@@ -45,4 +44,10 @@ def get_log_level(level):
         level = logging.NOTSET
     return level
 
-    return
+def get_logfile(configuration, mode):
+    logfile = configuration['logging']['logfile']
+    if mode not in logfile:
+        logfile = logfile.replace('.log', f'_{mode}.log')
+    if configuration[mode]['output'] not in logfile:
+        logfile = join(configuration[mode]['output'], logfile)
+    return logfile

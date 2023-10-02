@@ -18,7 +18,7 @@ def test_base_simulator(test_conf_file):
 
     # clean output
     conf = load_yaml_conf(test_conf_file)
-    rmtree(conf['simulator']['output'])
+    rmtree(conf['simulator']['output'], ignore_errors=True)
 
     # run simulator
     base_simulator(test_conf_file)

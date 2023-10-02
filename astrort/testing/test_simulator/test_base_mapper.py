@@ -20,7 +20,7 @@ def test_base_mapper(test_conf_file, seeds):
 
     # clean output
     conf = load_yaml_conf(test_conf_file)
-    rmtree(conf['mapper']['output'])
+    rmtree(conf['mapper']['output'], ignore_errors=True)
 
     # run simulator
     base_simulator(test_conf_file)
