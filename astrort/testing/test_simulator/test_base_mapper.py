@@ -7,6 +7,7 @@
 # *****************************************************************************
 
 import pytest
+import numpy as np
 from shutil import rmtree
 from os import listdir
 from os.path import isfile, join
@@ -15,7 +16,7 @@ from astrort.simulator.base_mapper import base_mapper
 from astrort.utils.wrap import load_yaml_conf
 
 @pytest.mark.test_conf_file
-@pytest.mark.parametrize('seeds', [None, list([1,2])])
+@pytest.mark.parametrize('seeds', [None, list()])
 def test_base_mapper(test_conf_file, seeds):
 
     # clean output
@@ -24,6 +25,8 @@ def test_base_mapper(test_conf_file, seeds):
 
     # run simulator
     base_simulator(test_conf_file)
+    if type(seeds) == list:
+        seeds = np.arange(conf['simulator']['samples'])
     base_mapper(test_conf_file, seeds)
 
     # check output

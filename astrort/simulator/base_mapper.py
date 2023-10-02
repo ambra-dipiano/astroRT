@@ -9,8 +9,7 @@
 import argparse
 from time import time
 from os import makedirs
-from os.path import join
-from astrort.utils.wrap import load_yaml_conf, write_mapping_info, execute_mapper_no_visibility
+from astrort.utils.wrap import load_yaml_conf, write_mapping_info, execute_mapper_no_visibility, plot_map
 from astrort.utils.utils import get_all_seeds
 from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
@@ -34,9 +33,14 @@ def base_mapper(configuration_file, seeds=None):
     log.info(f"\n {'-'*15} \n| START MAPPER | \n {'-'*15} \n")
     for seed in seeds:
         clock_map = time()
-        # check pointing option
-        execute_mapper_no_visibility(configuration, log)
+        # make map
+        fitsmap = execute_mapper_no_visibility(configuration, log)
         log.info(f"Mapping (seed = {seed}) complete, took {time() - clock_map} s")
+        # make plot
+        if configuration['mapper']['plot']:
+            clock_plot = time()
+            plotmap = plot_map(fitsmap, log)
+            log.info(f"Plotting (seed = {seed}) complete, took {time() - clock_plot} s")
         # timing simulation
         clock_map = time() - clock_map
         # save simulation data

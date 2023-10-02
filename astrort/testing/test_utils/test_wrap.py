@@ -107,11 +107,24 @@ def test_execute_mapper_no_visibility(test_conf_file):
     # clean output
     conf = load_yaml_conf(test_conf_file)
     rmtree(conf['mapper']['output'], ignore_errors=True)
-    conf['simulator']['samples']
+    conf['simulator']['samples'] = 1
     log = set_logger(logging.CRITICAL)
 
     # run simulator
     base_simulator(test_conf_file)
-    execute_mapper_no_visibility(conf, log)
-    mapfile = seeds_to_string_formatter_files(conf['simulator']['samples'], conf['simulator']['output'], conf['simulator']['name'], conf['simulator']['seed'], 'fits', suffix='map')
-    assert isfile(mapfile)
+    fitsmap = execute_mapper_no_visibility(conf, log)
+    assert isfile(fitsmap)
+
+@pytest.mark.test_conf_file
+def test_plot_map(test_conf_file):
+    # clean output
+    conf = load_yaml_conf(test_conf_file)
+    rmtree(conf['mapper']['output'], ignore_errors=True)
+    conf['simulator']['samples'] = 1
+    log = set_logger(logging.CRITICAL)
+
+    # run simulator
+    base_simulator(test_conf_file)
+    fitsmap = execute_mapper_no_visibility(conf, log)
+    plotmap = plot_map(fitsmap, log)
+    assert isfile(plotmap)

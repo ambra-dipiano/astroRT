@@ -16,6 +16,7 @@ from astropy.coordinates import SkyCoord
 from astrort.utils.utils import *
 from astrort.configure.check_configuration import CheckConfiguration
 from astrort.utils.mapping import Mapper
+from astrort.utils.plotting import Plotter
 
 def load_yaml_conf(yamlfile):
     with open(yamlfile) as f:
@@ -30,6 +31,7 @@ def execute_mapper_no_visibility(configuration, log):
     mapper = Mapper(log)
     mapper.get_countmap_in_fits(dl3_file=phlist, fitsname=skymap, template=map_template(), maproi=maproi, pixelsize=configuration['mapper']['pixelsize'], trange=[0, configuration['mapper']['exposure']], sigma=configuration['mapper']['smooth'])
     del mapper
+    return skymap
 
 def configure_simulator_no_visibility(simulator, configuration, log):
     if '$TEMPLATES$' in configuration['model']:
@@ -132,3 +134,11 @@ def write_mapping_info(configuration, datfile, clock):
             f.write('name seed exposure center_on pixelsize smooth computation_time\n')
     with open(datfile, 'a') as f:
         f.write(f'{name} {seed} {exposure} {center_type} {pixelsize} {smooth} {clock}\n')
+
+def plot_map(fitsmap, log):
+    plotmap = fitsmap.replace('.fits', '.png')
+    plot = Plotter(log)
+    plot.plot_fits_skymap(fitsmap, plotmap)
+    del plot
+    return plotmap
+    

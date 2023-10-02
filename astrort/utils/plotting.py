@@ -102,7 +102,6 @@ class Plotter():
         return ra, dec
 
     def counts_map(self, file, trange=None, erange=None, roi=5, name='skymap.png', title=None, xlabel='right ascension (deg)', ylabel='declination (deg)', figsize=(10, 10), fontsize=20, cmap='CMRmap', pixelsize=0.02, sigma=1):
-        self.__check_pointing()
         extent = self.get_extent(roi)
         # counts map
         data = self.get_phlist_data(file=file)
@@ -129,7 +128,8 @@ class Plotter():
         ax.set_ylabel(ylabel, fontsize=fontsize)
         ax.set_title(title, fontsize=fontsize)
         # pointing
-        ax.plot([self.pointing['ra']], [self.pointing['dec']], 'k+', markersize=fontsize)
+        if isinstance(self.pointing, dict):
+            ax.plot([self.pointing['ra']], [self.pointing['dec']], 'k+', markersize=fontsize)
         ax.set_xlim((extent[0], extent[1]))
         ax.set_ylim((extent[2], extent[3]))
         ax.set_aspect('equal')
@@ -141,7 +141,6 @@ class Plotter():
         return self
 
     def counts_map_with_wcs(self, file, trange=None, erange=None, roi=5, name='skymap.png', title=None, xlabel='right ascension (deg)', ylabel='declination (deg)', figsize=(10, 10), fontsize=20, cmap='CMRmap', pixelsize=0.02, sigma=1):
-        self.__check_pointing()
         extent = self.get_extent(roi=roi)
         # counts map
         data = self.get_phlist_data(file=file)
@@ -172,7 +171,8 @@ class Plotter():
         ax.set_ylabel(ylabel, fontsize=fontsize)
         ax.set_title(title, fontsize=fontsize)
         # pointing
-        ax.plot([self.pointing['ra']], [self.pointing['dec']], 'k+', markersize=fontsize)
+        if isinstance(self.pointing, dict):
+            ax.plot([self.pointing['ra']], [self.pointing['dec']], 'k+', markersize=fontsize)
         ax.set_aspect('equal')
         #ax.invert_xaxis()
         ax.grid(color='grey', ls='solid')
@@ -214,7 +214,6 @@ class Plotter():
         with fits.open(file) as h:
             try:
                 w = WCS(h['SKYMAP'].header)
-                print(h['SKYMAP'].header)
                 data = h['SKYMAP'].data
             except KeyError as e:
                 self.log.error(f'Missing "SKYMAP" extention, the input file may not be a compatible counts map. {e}')
