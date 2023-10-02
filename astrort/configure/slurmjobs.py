@@ -10,7 +10,7 @@ from yaml import dump
 from os import system
 from os.path import join, dirname, abspath
 
-def make_simulator_conf(jobname_conf, configuration, node_number):
+def make_configuration(jobname_conf, configuration, node_number):
     # simulator
     configuration['simulator']['seed'] = node_number*configuration['simulator']['samples'] + 1
     # logging
@@ -44,7 +44,7 @@ def make_simulator_sbatch(jobname, configuration, node_number):
     jobname_sh = join(output, f"{jobname}_simulator.sh")
     jobname_log = join(output, f"{jobname}_simulator.slurm")
     jobname_conf = join(output, f"{jobname}_simulator.yml")
-    make_simulator_conf(jobname_conf, configuration, node_number, mode='simulator')
+    make_configuration(jobname_conf, configuration, node_number, mode='simulator')
     make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
     system(f"sbatch {jobname_sh}")
     
@@ -56,7 +56,7 @@ def make_mapper_sbatch(jobname, configuration, node_number):
     jobname_sh = join(output, f"{jobname}_simulator.sh")
     jobname_log = join(output, f"{jobname}_simulator.slurm")
     jobname_conf = join(output, f"{jobname}_simulator.yml")
-    make_simulator_conf(jobname_conf, configuration, node_number, mode='simulator')
+    make_configuration(jobname_conf, configuration, node_number, mode='simulator')
     make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log)
     system(f"sbatch {jobname_sh}")
     return
