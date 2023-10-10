@@ -26,7 +26,7 @@ def load_yaml_conf(yamlfile):
 
 def execute_mapper_no_visibility(configuration, log):
     phlist = seeds_to_string_formatter_files(configuration['simulator']['samples'], configuration['simulator']['output'], configuration['simulator']['name'], configuration['simulator']['seed'], 'fits')
-    skymap = phlist.replace('.fits', '_map.fits')
+    skymap = phlist.replace('.fits', '_map.fits').replace(configuration['simulator']['output'], configuration['mapper']['output'])
     maproi = get_instrument_fov(configuration['simulator']['array'])
     mapper = Mapper(log)
     mapper.get_countmap_in_fits(dl3_file=phlist, fitsname=skymap, template=map_template(), maproi=maproi, pixelsize=configuration['mapper']['pixelsize'], trange=[0, configuration['mapper']['exposure']], sigma=configuration['mapper']['smooth'])
