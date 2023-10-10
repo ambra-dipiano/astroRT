@@ -65,11 +65,14 @@ def set_pointing(simulator, configuration, log):
 def randomise_pointing_sim(simulator):
     if '$TEMPLATES$' in simulator['model']:
         simulator['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(simulator['model']))
-    model_xml = ManageXml(xml=simulator['model'])
-    source = model_xml.getRaDec()
-    del model_xml
+    if 'background.xml' not in simulator['model']:
+        model_xml = ManageXml(xml=simulator['model'])
+        source = model_xml.getRaDec()
+        del model_xml
+        ra, dec = source[0][0] * u.deg, source[1][0] * u.deg
+    else:
+        ra, dec = np.random.uniform(0, 360) * u.deg, np.random.uniform(-90, 90) * u.deg
     # use astropy separation
-    ra, dec = source[0][0] * u.deg, source[1][0] * u.deg
     source = SkyCoord(ra, dec, frame='icrs')
     position_angle = 45 * u.deg
     separation = np.random.random() * get_instrument_fov(simulator['array']) * u.deg
@@ -79,14 +82,17 @@ def randomise_pointing_sim(simulator):
 def get_point_source_info(simulator):
     if '$TEMPLATES$' in simulator['model']:
         simulator['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(simulator['model']))
-    model_xml = ManageXml(xml=simulator['model'])
-    source = model_xml.getRaDec()
-    del model_xml
-    # use astropy separation
-    source = SkyCoord(source[0][0] * u.deg, source[1][0] * u.deg, frame='icrs')
-    pointing = SkyCoord(simulator['pointing']['ra'] * u.deg, simulator['pointing']['dec'] * u.deg, frame='icrs')
-    separation = source.separation(pointing)
-    return {'point_ra': pointing.ra.deg, 'point_dec': pointing.dec.deg, 'offset': separation.value, 'source_ra': source.ra.deg, 'source_dec': source.dec.deg}
+    if 'background.xml' not in simulator['model']: 
+        model_xml = ManageXml(xml=simulator['model'])
+        source = model_xml.getRaDec()
+        del model_xml
+        # use astropy separation
+        source = SkyCoord(source[0][0] * u.deg, source[1][0] * u.deg, frame='icrs')
+        pointing = SkyCoord(simulator['pointing']['ra'] * u.deg, simulator['pointing']['dec'] * u.deg, frame='icrs')
+        separation = source.separation(pointing)
+        return {'point_ra': pointing.ra.deg, 'point_dec': pointing.dec.deg, 'offset': separation.value, 'source_ra': source.ra.deg, 'source_dec': source.dec.deg}
+    else:
+        return {'point_ra': simulator['pointing']['ra'], 'point_dec': simulator['pointing']['dec'], 'offset': np.nan, 'source_ra': np.nan, 'source_dec': np.nan}
 
 def write_simulation_info(simulator, configuration, pointing, datfile, clock):
     name = seeds_to_string_formatter(configuration['samples'], configuration['name'], configuration['seed'])
