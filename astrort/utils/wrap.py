@@ -145,6 +145,7 @@ def merge_data_info(configuration, mode, log):
     folder = configuration['output']
     datfiles = [join(folder, f) for f in listdir(folder) if '.dat' in f and 'job' in f and mode in f]
     merger = join(folder, f'merged_{mode}_data.dat')
+    log.info(f"Merger file: {merger}")
     # check merger file
     if isfile(merger):
         log.warning(f"Merger output already exists, overwrite {merger}")
