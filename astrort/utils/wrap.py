@@ -97,15 +97,16 @@ def get_point_source_info(simulator):
 def write_simulation_info(simulator, configuration, pointing, datfile, clock):
     name = seeds_to_string_formatter(configuration['samples'], configuration['name'], configuration['seed'])
     seed = simulator.seed
+    fov = simulator.fov
     tstart, tstop = simulator.t
     duration = configuration['duration']
     irf = configuration['irf']
     point_ra, point_dec, offset, source_ra, source_dec = pointing['point_ra'], pointing['point_dec'], pointing['offset'], pointing['source_ra'], pointing['source_dec']
     if not isfile(datfile):
         with open(datfile, 'w+') as f:
-            f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset irf computation_time\n')
+            f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset irf fov sim_time\n')
     with open(datfile, 'a') as f:
-        f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset} {irf} {clock}\n')
+        f.write(f'{name} {seed} {tstart} {tstop} {duration} {source_ra} {source_dec} {point_ra} {point_dec} {offset} {irf} {fov} {clock}\n')
 
 def merge_simulation_info(configuration, log):
     folder = configuration['output']
@@ -114,8 +115,8 @@ def merge_simulation_info(configuration, log):
     # check merger file
     if isfile(merger):
         log.warning(f"Merger output already exists, overwrite {merger}")
-        with open(merger, 'w+') as f:
-            f.write('name seed start stop duration source_ra source_dec point_ra point_dec offset irf computation_time\n')
+        f = open(merger, 'w+')
+        f.close()
     # collect data
     for i, datfile in enumerate(datfiles):
         log.info(f"Collect data from {datfile}")
@@ -137,7 +138,7 @@ def write_mapping_info(configuration, datfile, clock):
     smooth = configuration['mapper']['smooth']
     if not isfile(datfile):
         with open(datfile, 'w+') as f:
-            f.write('name seed exposure center_on pixelsize smooth computation_time\n')
+            f.write('name seed exposure center_on pixelsize smooth map_time\n')
     with open(datfile, 'a') as f:
         f.write(f'{name} {seed} {exposure} {center_type} {pixelsize} {smooth} {clock}\n')
 
