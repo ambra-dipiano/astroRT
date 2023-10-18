@@ -11,7 +11,6 @@ import logging
 import numpy as np
 from shutil import rmtree
 from astrort.utils.wrap import *
-from astrort.utils.utils import seeds_to_string_formatter_files
 from astrort.configure.logging import set_logger
 from astrort.simulator.base_simulator import base_simulator
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
@@ -92,11 +91,35 @@ def test_merge_simulation_info(test_conf_file, test_tmp_folder):
     assert isfile(join(conf['simulator']['output'], 'merged_sim_data.dat'))
     del sim
 
+@pytest.mark.test_tmp_folder
+@pytest.mark.test_conf_file
+@pytest.mark.parametrize('mode', ['simulator', 'mapper'])
+def test_merge_data_info(test_conf_file, test_tmp_folder, mode):
+    conf = load_yaml_conf(test_conf_file)
+    conf['simulator']['pointing'] = {'ra': 1, 'dec': 1}
+    pointing = get_point_source_info(conf['simulator'])
+    sim = RTACtoolsSimulation()
+    clock = 1
+    for i in range(5):
+        sim.seed = i
+        datfile = join(conf['simulator']['output'], f'job_{i}_simulator.dat')
+        write_simulation_info(sim, conf['simulator'], pointing, datfile, clock)
+        assert isfile(datfile)
+
+        datfile = join(conf['mapper']['output'], f'job_{i}_mapper.dat')
+        write_mapping_info(conf, datfile, clock)
+        assert isfile(datfile)
+    
+    log = set_logger(logging.CRITICAL, join(test_tmp_folder, 'test_set_logger.log'))
+    merge_data_info(conf[mode], mode, log)
+    assert isfile(join(conf[mode]['output'], f'merged_{mode}_data.dat'))
+    del sim
+
 @pytest.mark.test_conf_file
 def test_write_mapping_info(test_conf_file):
     conf = load_yaml_conf(test_conf_file)
     conf['simulator']['pointing'] = {'ra': 1, 'dec': 1}
-    datfile = join(conf['simulator']['output'], 'simulator.dat')
+    datfile = join(conf['mapper']['output'], 'mapper.dat')
     clock = 1
     write_mapping_info(conf, datfile, clock)
     assert isfile(datfile)

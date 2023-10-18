@@ -141,6 +141,27 @@ def write_mapping_info(configuration, datfile, clock):
     with open(datfile, 'a') as f:
         f.write(f'{name} {seed} {exposure} {center_type} {pixelsize} {smooth} {clock}\n')
 
+def merge_data_info(configuration, mode, log):
+    folder = configuration['output']
+    datfiles = [join(folder, f) for f in listdir(folder) if '.dat' in f and 'job' in f and mode in f]
+    merger = join(folder, f'merged_{mode}_data.dat')
+    # check merger file
+    if isfile(merger):
+        log.warning(f"Merger output already exists, overwrite {merger}")
+        f = open(merger, 'w+')
+        f.close()
+    # collect data
+    for i, datfile in enumerate(datfiles):
+        log.info(f"Collect data from {datfile}")
+        data = pd.read_csv(join(datfile), sep=' ')
+        if i == 0:
+            table = data
+        else:
+            table = pd.concat([table, data], ignore_index=True)
+        log.info(f"Lines in data: {len(table)}")
+    # write merger file
+    table.to_csv(merger, index=False, header=True, sep=' ', na_rep=np.nan)
+
 def plot_map(fitsmap, log):
     plotmap = fitsmap.replace('.fits', '.png')
     plot = Plotter(log)
