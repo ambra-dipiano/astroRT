@@ -7,8 +7,7 @@
 # *****************************************************************************
 
 import argparse
-from os import listdir
-from os.path import join, isfile
+from os.path import join
 from astrort.utils.wrap import load_yaml_conf, merge_data_info
 from astrort.configure.logging import set_logger
 
