@@ -6,10 +6,12 @@
 # Ambra Di Piano <ambra.dipiano@inaf.it>
 # *****************************************************************************
 
-import pytest
-from astrort.utils.wrap import load_yaml_conf
+import sys
+from os import system
 
-@pytest.mark.astrort_configuration
-def test_load_yaml_conf(astrort_configuration):
-    configuration = load_yaml_conf(astrort_configuration)
-    assert type(configuration) == dict
+start_job_id = int(sys.argv[1])
+jobs = int(sys.argv[2])
+
+for i in range(jobs):
+    system(f"scancel {start_job_id+i}")
+

@@ -20,12 +20,12 @@ class CheckConfiguration():
         return self
 
     def check_tags(self):
-        tags = ['simulator', 'visibility']
+        tags = ['simulator', 'visibility', 'logging']
         assert self.conf.keys() == tags
         return self
 
     def check_simulator(self):
-        keys = ['name', 'array', 'irf', 'prod', 'pointing', 'duration', 'samples', 'seed', 'model']
+        keys = ['name', 'array', 'irf', 'prod', 'pointing', 'duration', 'samples', 'seed', 'model', 'output']
         assert self.conf['simulator'].keys() == keys
         assert type(self.conf['simulator']['name']) == str
         assert type(self.conf['simulator']['array']) in ['lst', 'mst', 'sst', 'cta', 'north', 'south']
@@ -36,10 +36,44 @@ class CheckConfiguration():
         assert type(self.conf['simulator']['samples']) == int
         assert type(self.conf['simulator']['seed']) == int
         assert type(self.conf['simulator']['model']) == str
+        assert type(self.conf['simulator']['output']) == str
         return self
 
     def check_visibility(self):
         keys = ['start_time']
         assert self.conf['visibility'].keys() == keys
         assert type(self.conf['visibility']['start_time']) == str
+        return self
+
+    def check_logging(self):
+        keys = ['level', 'logfile', 'datfile']
+        assert self.conf['logging'].keys() == keys
+        assert (type(self.conf['logging']['level']) == str or type(self.conf['logging']['level']) == int) 
+        assert type(self.conf['logging']['logfile']) == str 
+        assert type(self.conf['logging']['datfile']) == str 
+        return self
+    
+    def check_slurm(self):
+        keys = ['nodes', 'tasks', 'cpus', 'mem', 'environment', 'name', 'account', 'partition']
+        assert self.conf['slurm'].keys() == keys
+        assert type(self.conf['slurm']['nodes']) == int
+        assert type(self.conf['slurm']['tasks']) == int
+        assert type(self.conf['slurm']['cpus']) == int
+        assert type(self.conf['slurm']['mem']) == str 
+        assert type(self.conf['slurm']['environment']) == str 
+        assert type(self.conf['slurm']['name']) == str 
+        assert type(self.conf['slurm']['account']) == str 
+        assert type(self.conf['slurm']['partition']) == str 
+        return self
+    
+    def check_mapper(self):
+        keys = ['exposure', 'smooth', 'pixelsize', 'center', 'plot', 'region', 'output']
+        assert self.conf['mapper'].keys() == keys
+        assert type(self.conf['mapper']['exposure']) == int
+        assert type(self.conf['mapper']['smooth']) == (float or int)
+        assert type(self.conf['mapper']['pixelsize']) == (float or int)
+        assert type(self.conf['mapper']['center']) in ['pointing', 'source'] 
+        assert type(self.conf['mapper']['plot']) == bool
+        assert type(self.conf['mapper']['region']) == bool
+        assert type(self.conf['mapper']['output']) == str
         return self
