@@ -81,7 +81,7 @@ class Plotter():
         w.wcs.ctype = ['RA---CAR', 'DEC--CAR']
         w.wcs.crpix = [point_ref, point_ref]
         w.wcs.crval = [self.pointing['ra'], self.pointing['dec']]
-        w.wcs.cdelt = [-pixelsize, pixelsize]
+        w.wcs.cdelt = [pixelsize, pixelsize]
         w.wcs.lonpole = 0.0
         w.wcs.latpole = 67.49
         return w
