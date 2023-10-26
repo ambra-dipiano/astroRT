@@ -37,7 +37,7 @@ def base_mapper(configuration_file, seeds=None):
         fitsmap = execute_mapper_no_visibility(configuration, log)
         log.info(f"Mapping (seed = {seed}) complete, took {time() - clock_map} s")
         # make plot
-        if configuration['mapper']['plot']:
+        if configuration['mapper']['plot'] and configuration['mapper']['save'] == 'fits':
             clock_plot = time()
             plotmap = plot_map(fitsmap, log)
             log.info(f"Plotting (seed = {seed}) complete, took {time() - clock_plot} s")

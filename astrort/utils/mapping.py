@@ -191,26 +191,19 @@ class Mapper():
         extent = [pointing['ra']-roi, pointing['ra']+roi, pointing['dec']-roi, pointing['dec']+roi]
         return extent
 
-    def heatmap_with_smoothing(self, x, y, extent, sigma=1, bins=1000):
+    def get_heatmap(self, x, y, extent, sigma=0, bins=1000):
         r = [[extent[0], extent[1]], [extent[2], extent[3]]]
         heatmap, xedges, yedges = np.histogram2d(x, y, bins=bins)
-        heatmap = gaussian_filter(heatmap, sigma=sigma)
+        if sigma != 0:
+            heatmap = gaussian_filter(heatmap, sigma=sigma)
         return heatmap.T
 
-    def heatmap(self, x, y, extent, bins=1000):
-        r = [[extent[0], extent[1]], [extent[2], extent[3]]]
-        heatmap, xedges, yedges = np.histogram2d(x, y, bins=bins)
-        return heatmap.T
-
-    def from_dl3_to_dl4(self, dl3_data, pointing, maproi=5, pixelsize=0.02, sigma=1):
+    def from_dl3_to_dl4(self, dl3_data, pointing, maproi=5, pixelsize=0.02, sigma=0):
         ra = np.array(dl3_data.field('RA')).flatten()
         dec = np.array(dl3_data.field('DEC')).flatten()
         nbins = self.get_binning_size(maproi=maproi, pixelsize=pixelsize)
         extent = self.get_extent(pointing=pointing, roi=maproi)
-        if sigma != 0:
-            dl4_data = self.heatmap_with_smoothing(ra, dec, extent=extent, bins=nbins, sigma=sigma)
-        else:
-            dl4_data = self.heatmap(ra, dec, extent=extent, bins=nbins)
+        dl4_data = self.get_heatmap(ra, dec, extent=extent, bins=nbins, sigma=sigma)
         return dl4_data
 
     def selection_cuts(self, dl3_data, pointing, trange=None, erange=None, maproi=None):
@@ -224,3 +217,15 @@ class Mapper():
         if len(dl3_data) == 0:
             self.log.warning("Empty photon list selection.")
         return dl3_data
+
+    def get_countmap_in_npy(self, dl3_file, pixelsize=0.02, maproi=5, trange=None, erange=None, sigma=1, npyname='heatmap.npy'):
+        dl3_hdr = self.get_dl3_hdr(dl3_file=dl3_file)
+        pointing = {'ra': float(dl3_hdr['RA_PNT']), 'dec': float(dl3_hdr['DEC_PNT'])}
+        dl3_data = self.get_dl3_data(dl3_file=dl3_file)
+        dl3_data = self.selection_cuts(dl3_data=dl3_data, pointing=pointing, trange=trange, erange=erange, maproi=maproi)
+        if sigma != 0:
+            dl4_data = self.from_dl3_to_dl4(dl3_data=dl3_data, pointing=pointing, maproi=maproi, pixelsize=0.02, sigma=sigma)
+        else:
+            dl4_data = self.from_dl3_to_dl4(dl3_data=dl3_data, pointing=pointing, maproi=maproi, pixelsize=pixelsize)
+        np.save(npyname, dl4_data, allow_pickle=True, fix_imports=True)
+        return

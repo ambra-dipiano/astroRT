@@ -82,8 +82,8 @@ class Plotter():
         w.wcs.crpix = [point_ref, point_ref]
         w.wcs.crval = [self.pointing['ra'], self.pointing['dec']]
         w.wcs.cdelt = [pixelsize, pixelsize]
-        w.wcs.lonpole = 0.0
-        w.wcs.latpole = 67.49
+        #w.wcs.lonpole = 0.0
+        #w.wcs.latpole = 67.49
         return w
 
     def reshape_coords(self, ra, dec):
@@ -182,6 +182,35 @@ class Plotter():
         return self
 
     def plot_fits_skymap(self, file, name='skymap.png', title=None, xlabel='right ascension (deg)', ylabel='declination (deg)', figsize=(10, 10), fontsize=20, cmap='CMRmap', logbar=False):
+
+        # get map
+        data, wcs = self.get_skymap_data_with_wcs(file=file)
+        # plot
+        fig = plt.figure(figsize=figsize) 
+        ax = plt.subplot(projection=wcs)
+        ax.coords[0].set_format_unit(u.deg)
+        ax.coords[1].set_format_unit(u.deg)
+        if logbar:
+            img = plt.imshow(data, norm=SymLogNorm(1, base=10), origin='lower', interpolation='gaussian', cmap=cmap)
+        else: 
+            img = plt.imshow(data, interpolation='gaussian', cmap=cmap)
+        cb = plt.colorbar(img, ax=ax)
+        # axis
+        ax.tick_params(axis='both', labelsize=fontsize)
+        cb.ax.tick_params(labelsize=fontsize) 
+        cb.set_label('counts', fontsize=fontsize)
+        ax.set_xlabel(xlabel, fontsize=fontsize)
+        ax.set_ylabel(ylabel, fontsize=fontsize)
+        ax.set_title(title, fontsize=fontsize)
+        ax.set_aspect('equal')
+        #ax.invert_xaxis()
+        ax.grid(color='grey', ls='solid')
+        #fig.tight_layout()
+        fig.savefig(name)
+        plt.close()
+        return self
+    
+    def plot_npy_skymap(self, file, name='skymap.png', title=None, xlabel='right ascension (deg)', ylabel='declination (deg)', figsize=(10, 10), fontsize=20, cmap='CMRmap', logbar=False):
 
         # get map
         data, wcs = self.get_skymap_data_with_wcs(file=file)

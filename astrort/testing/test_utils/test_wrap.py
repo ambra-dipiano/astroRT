@@ -152,9 +152,11 @@ def test_execute_mapper_no_visibility(test_conf_file):
     assert isfile(fitsmap)
 
 @pytest.mark.test_conf_file
-def test_plot_map(test_conf_file):
+@pytest.mark.parametrize('save', ['fits', 'npy'])
+def test_plot_map(test_conf_file, save):
     # clean output
     conf = load_yaml_conf(test_conf_file)
+    conf['mapper']['save'] = save
     rmtree(conf['mapper']['output'], ignore_errors=True)
     conf['simulator']['samples'] = 1
     log = set_logger(logging.CRITICAL)
@@ -162,5 +164,6 @@ def test_plot_map(test_conf_file):
     # run simulator
     base_simulator(test_conf_file)
     fitsmap = execute_mapper_no_visibility(conf, log)
-    plotmap = plot_map(fitsmap, log)
-    assert isfile(plotmap)
+    if save == 'fits':
+        plotmap = plot_map(fitsmap, log)
+        assert isfile(plotmap)
