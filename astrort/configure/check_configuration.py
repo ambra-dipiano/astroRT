@@ -25,13 +25,14 @@ class CheckConfiguration():
         return self
 
     def check_simulator(self):
-        keys = ['name', 'array', 'irf', 'prod', 'pointing', 'duration', 'samples', 'seed', 'model', 'output']
+        keys = ['name', 'array', 'irf', 'prod', 'pointing', 'maxoffset', 'duration', 'samples', 'seed', 'model', 'output']
         assert self.conf['simulator'].keys() == keys
         assert type(self.conf['simulator']['name']) == str
         assert type(self.conf['simulator']['array']) in ['lst', 'mst', 'sst', 'cta', 'north', 'south']
         assert type(self.conf['simulator']['irf']) == str
         assert type(self.conf['simulator']['prod']) == str
-        assert (type(self.conf['simulator']['pointing']) == str or type(self.conf['simulator']['pointing']) == dict)
+        assert type(self.conf['simulator']['pointing']) == (str or dict)
+        assert type(self.conf['simulator']['maxoffset']) == (int or float)
         assert type(self.conf['simulator']['duration']) == int
         assert type(self.conf['simulator']['samples']) == int
         assert type(self.conf['simulator']['seed']) == int

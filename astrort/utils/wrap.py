@@ -77,7 +77,7 @@ def randomise_pointing_sim(simulator):
     # use astropy separation
     source = SkyCoord(ra, dec, frame='icrs')
     position_angle = 45 * u.deg
-    separation = np.random.random() * get_instrument_fov(simulator['array']) * u.deg
+    separation = np.random.random() * simulator['maxoffset'] * u.deg
     pointing = source.directional_offset_by(position_angle, separation)
     return {'point_ra': pointing.ra.deg, 'point_dec': pointing.dec.deg, 'offset': separation.value, 'source_ra': source.ra.deg, 'source_dec': source.dec.deg}
 
