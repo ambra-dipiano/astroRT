@@ -94,3 +94,20 @@ def test_get_all_seeds(test_conf_file):
 
 def test_map_template():
     assert map_template() == join(dirname(abspath(__file__)).replace('testing/test_utils', 'templates'), 'base_empty_map.fits')
+
+@pytest.mark.parametrize('array', ['lst', 'mst', 'sst'])
+@pytest.mark.parametrize('site', ['north', 'south'])
+def test_select_random_irf(array, site):
+    prod = 'prod5-v0.1'
+    irf = select_random_irf(array, prod)
+    assert array.upper() in irf
+    irf = select_random_irf(site, prod)
+    assert site.capitalize() in irf
+
+@pytest.mark.parametrize('start', [1, 50, 200])
+def test_get_all_seeds(start):
+    conf = {'seed': start, 'samples': 20}
+    seed = get_all_seeds(conf)
+    assert start+5 in seed
+    assert start+15 in seed
+
