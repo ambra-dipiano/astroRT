@@ -42,11 +42,6 @@ def configure_simulator_no_visibility(simulator, configuration, log):
     simulator.model = configuration['model']
     simulator.output = seeds_to_string_formatter_files(configuration['samples'], configuration['output'], configuration['name'], configuration['seed'], 'fits')
     simulator.caldb = configuration['prod']
-    if configuration['irf'] == 'random':
-        simulator.irf = select_random_irf(configuration['array'], configuration['prod'])
-        log.info(f"Randomising instrument response function [{simulator.irf}]")
-    else:
-        simulator.irf = configuration['irf']
     simulator.fov = get_instrument_fov(configuration['array'])
     simulator.t = [0, configuration['duration']]
     simulator.e = adjust_tev_range_to_irf(get_instrument_tev_range(configuration['array']), simulator.irf)
@@ -172,4 +167,11 @@ def plot_map(fitsmap, log):
     plot.plot_fits_skymap(fitsmap, plotmap)
     del plot
     return plotmap
-    
+
+def set_irf(configuration, log):
+    if configuration['irf'] == 'random':
+        irf = select_random_irf(configuration['array'], configuration['prod'])
+        log.info(f"Randomising instrument response function [{irf}]")
+    else:
+        irf = configuration['irf']
+    return irf

@@ -167,3 +167,10 @@ def test_plot_map(test_conf_file, save):
     if save == 'fits':
         plotmap = plot_map(fitsmap, log)
         assert isfile(plotmap)
+
+def test_set_irf():
+    conf = {'array': 'lst', 'prod': 'prod5-v0.1', 'irf': 'random'}
+    log = set_logger(logging.CRITICAL)
+    irf = set_irf(conf, log)
+    print(irf)
+    assert conf['array'].upper() in irf
