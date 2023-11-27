@@ -7,9 +7,10 @@
 # *****************************************************************************
 
 import argparse
+import pandas as pd
 from time import time
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
-from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing
+from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing, set_irf
 from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
 
@@ -25,11 +26,22 @@ def base_simulator(configuration_file):
     #makedirs(configuration['simulator']['output'], exist_ok=True)
     # start simulations
     log.info(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
+    if configuration['simulator']['replicate'] is not None:
+        replica = pd.read_csv(configuration['simulator']['replicate'], sep=' ', header=0)
+        log.info(f"Replicate pointing and IRF from {configuration['simulator']['replicate']}")
+    else:
+        replica = None
+    # loop seeds
     for i in range(configuration['simulator']['samples']):
         clock_sim = time()
         simulator = RTACtoolsSimulation()
         # check pointing option
+        if replica is not None:
+            configuration['simulator']['pointing'] = {'ra': replica[replica['seed']==configuration['simulator']['seed']]['point_ra'].values[0],  
+                                                      'dec': replica[replica['seed']==configuration['simulator']['seed']]['point_dec'].values[0]}
+            configuration['simulator']['irf'] = replica[replica['seed']==configuration['simulator']['seed']]['irf'].values[0]   
         simulator, point = set_pointing(simulator, configuration['simulator'], log)
+        simulator.irf = set_irf(configuration['simulator'], log)
         # complete configuration
         simulator = configure_simulator_no_visibility(simulator, configuration['simulator'], log)
         simulator.run_simulation()
