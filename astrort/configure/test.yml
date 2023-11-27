@@ -10,6 +10,7 @@ simulator:
   seed: 1
   model: $TEMPLATES$/crab.xml
   output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
+  replicate: null
   
 mapper:
   exposure: 10
