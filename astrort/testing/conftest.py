@@ -19,3 +19,7 @@ def test_conf_file():
 def test_tmp_folder():
     makedirs(join(dirname(abspath(astrort.__file__)), 'testing', 'tmp'), exist_ok=True)
     return join(dirname(abspath(astrort.__file__)), 'testing', 'tmp')
+
+@pytest.fixture(scope='function')
+def test_data_folder():
+    return join(dirname(abspath(astrort.__file__)), 'testing', 'data')
