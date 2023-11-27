@@ -56,6 +56,7 @@ def set_pointing(simulator, configuration, log):
         log.info(f"Randomising pointing coordinates [{point['point_ra']}, {point['point_dec']}]")
     else:
         point = get_point_source_info(configuration)
+        log.info(f"Using pointing coordinates [{configuration['pointing']}]")
     simulator.pointing = [point['point_ra'], point['point_dec']]
     return simulator, point
 
