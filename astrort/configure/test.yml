@@ -4,6 +4,7 @@ simulator:
   irf: North_z60_0.5h_LST
   prod: prod5-v0.1
   pointing: random
+  target: random
   maxoffset: 2
   duration: 10
   samples: 2
