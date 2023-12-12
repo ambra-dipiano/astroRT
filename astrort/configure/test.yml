@@ -22,6 +22,7 @@ mapper:
   region: false
   output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
   save: npy
+  replicate: null
 
 visibility:
   start_time: '2030-01-01T00:00:00'
