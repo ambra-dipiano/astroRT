@@ -25,7 +25,7 @@ class CheckConfiguration():
         return self
 
     def check_simulator(self):
-        keys = ['name', 'array', 'irf', 'prod', 'pointing', 'target', 'maxoffset', 'duration', 'samples', 'seed', 'model', 'output']
+        keys = ['name', 'array', 'irf', 'prod', 'pointing', 'target', 'maxoffset', 'duration', 'samples', 'seed', 'model', 'output', 'replicate']
         assert self.conf['simulator'].keys() == keys
         assert type(self.conf['simulator']['name']) == str
         assert type(self.conf['simulator']['array']) in ['lst', 'mst', 'sst', 'cta', 'north', 'south']
@@ -39,6 +39,7 @@ class CheckConfiguration():
         assert type(self.conf['simulator']['seed']) == int
         assert type(self.conf['simulator']['model']) == str
         assert type(self.conf['simulator']['output']) == str
+        assert type(self.conf['simulator']['replicate']) == (str or None)
         return self
 
     def check_visibility(self):
@@ -69,7 +70,7 @@ class CheckConfiguration():
         return self
     
     def check_mapper(self):
-        keys = ['exposure', 'smooth', 'pixelsize', 'center', 'plot', 'region', 'output']
+        keys = ['exposure', 'smooth', 'pixelsize', 'center', 'plot', 'region', 'output', 'replicate', 'save']
         assert self.conf['mapper'].keys() == keys
         assert type(self.conf['mapper']['exposure']) == int
         assert type(self.conf['mapper']['smooth']) == (float or int)
@@ -78,4 +79,6 @@ class CheckConfiguration():
         assert type(self.conf['mapper']['plot']) == bool
         assert type(self.conf['mapper']['region']) == bool
         assert type(self.conf['mapper']['output']) == str
+        assert type(self.conf['simulator']['replicate']) == (str or None)
+        assert type(self.conf['simulator']['save']) == str
         return self
