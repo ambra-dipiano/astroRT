@@ -66,6 +66,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-f', '--configuration', type=str, required=True, help="Path of yaml configuration file")
     parser.add_argument('-n', '--nodes', type=int, default=0, help='Number of slurm nodes to occupy for submission, if unset it will not submit to slurm' )
+    parser.add_argument('-mp', '--mpthreads', type=int, default=0, choices=range(0,7), help='Number of threads to use for parallel simulation, if unset it will not use multi-threading' )
     args = parser.parse_args()
 
     main(args.configuration, args.nodes)
