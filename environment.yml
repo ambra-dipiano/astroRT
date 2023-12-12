@@ -8,5 +8,6 @@ dependencies:
   - pandas
   - pyyaml
   - pytest
+  - pytest-cov
   - pip:
     - lxml

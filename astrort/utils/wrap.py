@@ -62,10 +62,10 @@ def set_pointing(simulator, configuration, log):
     return simulator, point
 
 def randomise_pointing_sim(simulator):
-    if '$TEMPLATES$' in model:
-        model = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(model))
-    if 'background.xml' not in model:
-        model_xml = ManageXml(xml=model)
+    if '$TEMPLATES$' in simulator['model']:
+        simulator['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(simulator['model']))
+    if 'background.xml' not in simulator['model']:
+        model_xml = ManageXml(xml=simulator['model'])
         source = model_xml.getRaDec()
         del model_xml
         ra, dec = source[0][0] * u.deg, source[1][0] * u.deg
@@ -79,10 +79,10 @@ def randomise_pointing_sim(simulator):
     return {'point_ra': pointing.ra.deg, 'point_dec': pointing.dec.deg, 'offset': separation.value, 'source_ra': source.ra.deg, 'source_dec': source.dec.deg}
 
 def get_point_source_info(simulator):
-    if '$TEMPLATES$' in model:
-        model = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(model))
-    if 'background.xml' not in model: 
-        model_xml = ManageXml(xml=model)
+    if '$TEMPLATES$' in simulator['model']:
+        simulator['model'] = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(simulator['model']))
+    if 'background.xml' not in simulator['model']: 
+        model_xml = ManageXml(xml=simulator['model'])
         source = model_xml.getRaDec()
         del model_xml
         # use astropy separation
