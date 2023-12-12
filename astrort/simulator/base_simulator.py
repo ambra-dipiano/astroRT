@@ -10,7 +10,7 @@ import argparse
 import pandas as pd
 from time import time
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
-from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing, set_irf
+from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing, set_irf, randomise_target
 from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
 
@@ -34,6 +34,9 @@ def base_simulator(configuration_file):
     # loop seeds
     for i in range(configuration['simulator']['samples']):
         clock_sim = time()
+        # randomise source position in model
+        if configuration['simulator']['target'] == 'random' and 'background' not in configuration['simulator']['model']:
+            configuration['simulator']['model'] = randomise_target(model=configuration['simulator']['model'], output=configuration['simulator']['output'], name=configuration['simulator']['name'], samples=configuration['simulator']['samples'], seed=configuration['simulator']['seed'])
         simulator = RTACtoolsSimulation()
         # check pointing option
         if replica is not None:

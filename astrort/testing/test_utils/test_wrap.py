@@ -190,3 +190,16 @@ def test_set_pointing(test_conf_file, test_data_folder, replicate):
     sim = RTACtoolsSimulation()
     sim, point = set_pointing(sim, conf, log)
     assert type(sim.ra) == type(sim.dec) 
+
+@pytest.mark.test_conf_file
+@pytest.mark.test_tmp_folder
+def test_randomise_target(test_conf_file, test_tmp_folder):
+    conf = load_yaml_conf(test_conf_file)
+    model = conf['simulator']['model']
+    new_model = randomise_target(model=model, output=test_tmp_folder, samples=1, name='crab', seed=1)
+    model_xml = ManageXml(xml=new_model)
+    source = model_xml.getRaDec()
+    del model_xml
+    ra, dec = source[0][0], source[1][0]
+    assert ra != 83.63
+    assert dec != 22.01
