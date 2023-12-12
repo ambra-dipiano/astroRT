@@ -23,7 +23,6 @@ def base_simulator(configuration_file):
     log.info(f"Simulator configured, took {time() - clock} s")
     # create output dir
     log.info(f"Output folder: {configuration['simulator']['output']}")
-    #makedirs(configuration['simulator']['output'], exist_ok=True)
     # start simulations
     log.info(f"\n {'-'*17} \n| START SIMULATOR | \n {'-'*17} \n")
     if configuration['simulator']['replicate'] is not None:
