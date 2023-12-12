@@ -176,8 +176,8 @@ def test_set_irf(test_conf_file, test_data_folder, replicate):
     conf = load_yaml_conf(test_conf_file)
     conf['simulator']['replicate'] = join(test_data_folder, replicate) if replicate is not None else replicate
     log = set_logger(logging.CRITICAL)
-    irf = set_irf(conf, log)
-    assert conf['array'].upper() in irf
+    irf = set_irf(conf['simulator'], log)
+    assert conf['simulator']['array'].upper() in irf
 
 @pytest.mark.test_conf_file
 @pytest.mark.test_data_folder
@@ -188,8 +188,8 @@ def test_set_pointing(test_conf_file, test_data_folder, replicate):
     conf['simulator']['replicate'] = join(test_data_folder, replicate) if replicate is not None else replicate
     log = set_logger(logging.CRITICAL)
     sim = RTACtoolsSimulation()
-    sim, point = set_pointing(sim, conf, log)
-    assert type(sim.ra) == type(sim.dec) 
+    sim, point = set_pointing(sim, conf['simulator'], log)
+    assert type(sim.pointing[0]) == type(sim.pointing[1]) 
 
 @pytest.mark.test_conf_file
 @pytest.mark.test_tmp_folder
