@@ -10,7 +10,7 @@ import argparse
 import pandas as pd
 from time import time
 from rtasci.lib.RTACtoolsSimulation import RTACtoolsSimulation
-from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing, set_irf, randomise_target
+from astrort.utils.wrap import load_yaml_conf, configure_simulator_no_visibility, write_simulation_info, set_pointing, set_irf, randomise_target, replicate_target
 from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
 
@@ -35,7 +35,7 @@ def base_simulator(configuration_file):
     for i in range(configuration['simulator']['samples']):
         clock_sim = time()
         # randomise source position in model
-        if configuration['simulator']['target'] == 'random' and 'background' not in configuration['simulator']['model']:
+        if configuration['simulator']['target'] == 'random' and replica is None:
             configuration['simulator']['model'] = randomise_target(model=configuration['simulator']['model'], output=configuration['simulator']['output'], name=configuration['simulator']['name'], samples=configuration['simulator']['samples'], seed=configuration['simulator']['seed'])
         simulator = RTACtoolsSimulation()
         # check pointing option
@@ -43,6 +43,8 @@ def base_simulator(configuration_file):
             configuration['simulator']['pointing'] = {'ra': replica[replica['seed']==configuration['simulator']['seed']]['point_ra'].values[0],  
                                                       'dec': replica[replica['seed']==configuration['simulator']['seed']]['point_dec'].values[0]}
             configuration['simulator']['irf'] = replica[replica['seed']==configuration['simulator']['seed']]['irf'].values[0]   
+            configuration['simulator']['model'] = replicate_target(model=configuration['simulator']['model'], output=configuration['simulator']['output'], name=configuration['simulator']['name'], samples=configuration['simulator']['samples'], seed=configuration['simulator']['seed'], ra=replica[replica['seed']==configuration['simulator']['seed']]['source_ra'].values[0], dec=replica[replica['seed']==configuration['simulator']['seed']]['source_dec'].values[0])
+
         simulator, point = set_pointing(simulator, configuration['simulator'], log)
         simulator.irf = set_irf(configuration['simulator'], log)
         # complete configuration

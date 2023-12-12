@@ -203,3 +203,16 @@ def test_randomise_target(test_conf_file, test_tmp_folder):
     ra, dec = source[0][0], source[1][0]
     assert ra != 83.63
     assert dec != 22.01
+
+@pytest.mark.test_conf_file
+@pytest.mark.test_tmp_folder
+def test_replicate_target(test_conf_file, test_tmp_folder):
+    conf = load_yaml_conf(test_conf_file)
+    ra, dec = 145.36, -21.92
+    new_model = replicate_target(model=conf['simulator']['model'], output=test_tmp_folder, samples=1, name='crab', seed=1, ra=ra, dec=dec)
+    model_xml = ManageXml(xml=new_model)
+    source = model_xml.getRaDec()
+    del model_xml
+    new_ra, new_dec = source[0][0], source[1][0]
+    assert np.round(new_ra, decimals=2) == ra
+    assert np.round(new_dec, decimals=2) == dec

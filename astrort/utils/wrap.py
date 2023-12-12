@@ -187,3 +187,13 @@ def randomise_target(model, output, samples, name, seed):
     model_xml.setModelParameters(parameters=('RA', 'DEC'), values=(np.random.uniform(0, 360), np.random.uniform(-90, 90)), source=name)
     del model_xml
     return new_model
+
+def replicate_target(model, output, samples, name, seed, ra, dec):
+    if '$TEMPLATES$' in model:
+        model = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(model))
+    new_model = join(output, seeds_to_string_formatter(samples, name, seed) + '.xml')
+    copyfile(model, new_model)
+    model_xml = ManageXml(xml=new_model)
+    model_xml.setModelParameters(parameters=('RA', 'DEC'), values=(ra, dec), source=name)
+    del model_xml
+    return new_model
