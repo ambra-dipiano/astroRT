@@ -11,13 +11,13 @@ import pandas as pd
 from time import time
 from os import makedirs
 from os.path import join
-from astrort.utils.wrap import load_yaml_conf, write_mapping_info, execute_mapper_no_visibility, plot_map
+from astrort.utils.wrap import load_yaml_conf, write_mapping_info, plot_map
 from astrort.utils.utils import get_all_seeds, get_instrument_fov, get_instrument_tev_range, adjust_tev_range_to_irf
 from astrort.configure.logging import set_logger, get_log_level, get_logfile
 from astrort.configure.slurmjobs import slurm_submission
 from rtasci.lib.RTACtoolsAnalysis import RTACtoolsAnalysis
 
-def base_mapper(configuration_file, seeds=None):
+def base_cleaner(configuration_file, seeds=None):
     clock = time()
     configuration = load_yaml_conf(configuration_file)
     logfile = get_logfile(configuration, mode='mapper')
@@ -52,6 +52,7 @@ def base_mapper(configuration_file, seeds=None):
         # make noisy map
         mapper.sky_subtraction = 'NONE'
         mapper.output = join(configuration['mapper']['output'] + '_noisy', replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '_map.fits')
+        log.debug(f"Noisy map: {mapper.output}")
         mapper.run_skymap(wbin=configuration['mapper']['pixelsize'])
         # make plot
         if configuration['mapper']['plot'] and configuration['mapper']['save'] == 'fits':
@@ -62,6 +63,7 @@ def base_mapper(configuration_file, seeds=None):
         mapper.sky_subtraction = 'IRF'
         mapper.output = join(configuration['mapper']['output'] + '_clean', replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '_map.fits')
         mapper.run_skymap(wbin=configuration['mapper']['pixelsize'])
+        log.debug(f"Clean map: {mapper.output}")
         # make plot
         if configuration['mapper']['plot'] and configuration['mapper']['save'] == 'fits':
             clock_plot = time()
@@ -80,9 +82,9 @@ def base_mapper(configuration_file, seeds=None):
 
 def main(configuration, nodes):
     if nodes == 0:
-        base_mapper(configuration)
+        base_cleaner(configuration)
     else:
-        slurm_submission(configuration, nodes, mode='mapper')
+        slurm_submission(configuration, nodes, mode='mapper', script='base_cleaner')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
