@@ -15,11 +15,11 @@ def map_template():
     return join(dirname(abspath(__file__)).replace('utils', 'templates'), 'base_empty_map.fits')
 
 def seeds_to_string_formatter_files(samples, output, name, seed, ext, suffix=None):
-    if samples <= 1e3:
+    if samples < 1e3:
         name = join(output, f"{name}_{seed:03d}.{ext}")
-    elif samples <= 1e5:
+    elif samples < 1e5:
         name = join(output, f"{name}_{seed:05d}.{ext}")
-    elif samples <= 1e8:
+    elif samples < 1e8:
         name = join(output, f"{name}_{seed:08d}.{ext}")
     else:
         name = join(output, f"{name}_{seed}.{ext}")
@@ -29,11 +29,11 @@ def seeds_to_string_formatter_files(samples, output, name, seed, ext, suffix=Non
     return name
 
 def seeds_to_string_formatter(samples, name, seed):
-    if samples <= 1e3:
+    if samples < 1e3:
         name = join(f"{name}_{seed:03d}")
-    elif samples <= 1e5:
+    elif samples < 1e5:
         name = join(f"{name}_{seed:05d}")
-    elif samples <= 1e8:
+    elif samples < 1e8:
         name = join(f"{name}_{seed:08d}")
     else:
         name = join(f"{name}_{seed}")
