@@ -184,7 +184,8 @@ def randomise_target(model, output, samples, name, seed):
     new_model = join(output, seeds_to_string_formatter(samples, name, seed) + '.xml')
     copyfile(model, new_model)
     model_xml = ManageXml(xml=new_model)
-    model_xml.setModelParameters(parameters=('RA', 'DEC'), values=(np.random.uniform(0, 360), np.random.uniform(-90, 90)), source=name)
+    # skip DEC galactic center +/- 30 deg (DEC allowed [-90, -60] U [0, +90] in GAL [-90, -30] U [30, 90])
+    model_xml.setModelParameters(parameters=('RA', 'DEC'), values=(np.random.uniform(0, 360), np.random.choice([np.random.uniform(-90, 60), np.random.uniform(0, 90)])), source=name)
     del model_xml
     return new_model
 
