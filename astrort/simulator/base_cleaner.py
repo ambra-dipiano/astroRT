@@ -32,6 +32,8 @@ def base_cleaner(configuration_file, seeds=None):
     # create output dir
     log.info(f"Output folder: {configuration['mapper']['output']}")
     makedirs(configuration['mapper']['output'], exist_ok=True)
+    makedirs(join(configuration['mapper']['output'], 'clean'), exist_ok=True)
+    makedirs(join(configuration['mapper']['output'], 'noisy'), exist_ok=True)
     # start mapping
     log.info(f"\n {'-'*15} \n| START MAPPER | \n {'-'*15} \n")
     if configuration['mapper']['replicate'] is not None:
@@ -44,16 +46,18 @@ def base_cleaner(configuration_file, seeds=None):
         # configure map
         mapper = RTACtoolsAnalysis()
         mapper.input = join(configuration['simulator']['output'], replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '.fits')
+        log.debug(f"DL3: {mapper.input}")
         mapper.irf = replica[replica['seed']==configuration['simulator']['seed']]['irf'].values[0] 
-        mapper.caldb = configuration['mapper']['caldb']
-        mapper.e = adjust_tev_range_to_irf(get_instrument_tev_range(configuration['array']), mapper.irf)
+        log.debug(f"IRF: {mapper.irf}")
+        mapper.caldb = configuration['simulator']['prod']
+        mapper.e = adjust_tev_range_to_irf(get_instrument_tev_range(configuration['simulator']['array']), mapper.irf)
         mapper.t = [0, configuration['mapper']['exposure']]
         mapper.roi = get_instrument_fov(configuration['simulator']['array'])
         # make noisy map
         mapper.sky_subtraction = 'NONE'
-        mapper.output = join(configuration['mapper']['output'] + '_noisy', replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '_map.fits')
-        log.debug(f"Noisy map: {mapper.output}")
+        mapper.output = join(configuration['mapper']['output'], 'noisy', replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '_map.fits')
         mapper.run_skymap(wbin=configuration['mapper']['pixelsize'])
+        log.debug(f"Noisy map: {mapper.output}")
         # make plot
         if configuration['mapper']['plot'] and configuration['mapper']['save'] == 'fits':
             clock_plot = time()
@@ -61,7 +65,7 @@ def base_cleaner(configuration_file, seeds=None):
             log.info(f"Plotting noisy image (seed = {seed}) complete, took {time() - clock_plot} s")
         # make clean map
         mapper.sky_subtraction = 'IRF'
-        mapper.output = join(configuration['mapper']['output'] + '_clean', replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '_map.fits')
+        mapper.output = join(configuration['mapper']['output'], 'clean', replica[replica['seed']==configuration['simulator']['seed']]['name'].values[0] + '_map.fits')
         mapper.run_skymap(wbin=configuration['mapper']['pixelsize'])
         log.debug(f"Clean map: {mapper.output}")
         # make plot
