@@ -176,8 +176,8 @@ def test_set_irf(test_conf_file, test_data_folder, replicate):
     conf = load_yaml_conf(test_conf_file)
     conf['simulator']['replicate'] = join(test_data_folder, replicate) if replicate is not None else replicate
     log = set_logger(logging.CRITICAL)
-    irf = set_irf(conf, log)
-    assert conf['array'].upper() in irf
+    irf = set_irf(conf['simulator'], log)
+    assert conf['simulator']['array'].upper() in irf
 
 @pytest.mark.test_conf_file
 @pytest.mark.test_data_folder
@@ -188,5 +188,31 @@ def test_set_pointing(test_conf_file, test_data_folder, replicate):
     conf['simulator']['replicate'] = join(test_data_folder, replicate) if replicate is not None else replicate
     log = set_logger(logging.CRITICAL)
     sim = RTACtoolsSimulation()
-    sim, point = set_pointing(sim, conf, log)
-    assert type(sim.ra) == type(sim.dec) 
+    sim, point = set_pointing(sim, conf['simulator'], log)
+    assert type(sim.pointing[0]) == type(sim.pointing[1]) 
+
+@pytest.mark.test_conf_file
+@pytest.mark.test_tmp_folder
+def test_randomise_target(test_conf_file, test_tmp_folder):
+    conf = load_yaml_conf(test_conf_file)
+    model = conf['simulator']['model']
+    new_model = randomise_target(model=model, output=test_tmp_folder, samples=1, name='crab', seed=1)
+    model_xml = ManageXml(xml=new_model)
+    source = model_xml.getRaDec()
+    del model_xml
+    ra, dec = source[0][0], source[1][0]
+    assert ra != 83.63
+    assert dec != 22.01
+
+@pytest.mark.test_conf_file
+@pytest.mark.test_tmp_folder
+def test_replicate_target(test_conf_file, test_tmp_folder):
+    conf = load_yaml_conf(test_conf_file)
+    ra, dec = 145.36, -21.92
+    new_model = replicate_target(model=conf['simulator']['model'], output=test_tmp_folder, samples=1, name='crab', seed=1, ra=ra, dec=dec)
+    model_xml = ManageXml(xml=new_model)
+    source = model_xml.getRaDec()
+    del model_xml
+    new_ra, new_dec = source[0][0], source[1][0]
+    assert np.round(new_ra, decimals=2) == ra
+    assert np.round(new_dec, decimals=2) == dec

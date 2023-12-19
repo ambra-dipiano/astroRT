@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import astropy.units as u
 from os.path import dirname, abspath, join, basename, isfile
+from shutil import copyfile
 from rtasci.lib.RTAManageXml import ManageXml
 from astropy.coordinates import SkyCoord 
 from astrort.utils.utils import *
@@ -98,7 +99,7 @@ def write_simulation_info(simulator, configuration, pointing, datfile, clock):
     fov = simulator.fov
     tstart, tstop = simulator.t
     duration = configuration['duration']
-    irf = configuration['irf']
+    irf = simulator.irf
     point_ra, point_dec, offset, source_ra, source_dec = pointing['point_ra'], pointing['point_dec'], pointing['offset'], pointing['source_ra'], pointing['source_dec']
     if not isfile(datfile):
         with open(datfile, 'w+') as f:
@@ -176,3 +177,24 @@ def set_irf(configuration, log):
     else:
         irf = configuration['irf']
     return irf
+
+def randomise_target(model, output, samples, name, seed):
+    if '$TEMPLATES$' in model:
+        model = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(model))
+    new_model = join(output, seeds_to_string_formatter(samples, name, seed) + '.xml')
+    copyfile(model, new_model)
+    model_xml = ManageXml(xml=new_model)
+    # skip DEC galactic center +/- 30 deg (DEC allowed [-90, -60] U [0, +90] in GAL [-90, -30] U [30, 90])
+    model_xml.setModelParameters(parameters=('RA', 'DEC'), values=(np.random.uniform(0, 360), np.random.choice([np.random.uniform(-90, 60), np.random.uniform(0, 90)])), source=name)
+    del model_xml
+    return new_model
+
+def replicate_target(model, output, samples, name, seed, ra, dec):
+    if '$TEMPLATES$' in model:
+        model = join(dirname(abspath(__file__)).replace('utils', 'templates'), basename(model))
+    new_model = join(output, seeds_to_string_formatter(samples, name, seed) + '.xml')
+    copyfile(model, new_model)
+    model_xml = ManageXml(xml=new_model)
+    model_xml.setModelParameters(parameters=('RA', 'DEC'), values=(ra, dec), source=name)
+    del model_xml
+    return new_model

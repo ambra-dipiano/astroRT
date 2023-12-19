@@ -19,12 +19,12 @@ def make_configuration(jobname_conf, configuration, node_number, mode):
     configuration['logging']['logfile'] = join(configuration[mode]['output'], f'job_{node_number+1}_{mode}.log')
     configuration['logging']['datfile'] = join(configuration[mode]['output'], f'job_{node_number+1}_{mode}.dat')
     if configuration[mode]['replicate'] is not None:
-        configuration[mode]['replicate'] = join(dirname(configuration[mode]['replicate']), f'job_{node_number+1}_{mode}.dat')
+        configuration[mode]['replicate'] = join(dirname(configuration[mode]['replicate']), f'job_{node_number+1}_simulator.dat')
     # write new configuration
     with open(jobname_conf, 'w+') as f:
         dump(configuration, f, default_flow_style=False)
 
-def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log, mode):
+def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log, mode, script=None):
     # write sbatch
     with open(jobname_sh, 'w+') as f:
         f.write("#!/bin/bash")
@@ -40,21 +40,23 @@ def make_sh(jobname, slurmconf, jobname_conf, jobname_sh, jobname_log, mode):
         f.write(f"\nsource activate {slurmconf['environment']}")
         if mode == 'simulator':
             f.write(f"\npython {join(dirname(abspath(__file__)).replace('configure', 'simulator'), 'base_simulator.py')} -f {jobname_conf}\n")
-        elif mode == 'mapper':
+        elif mode == 'mapper' and script is None:
             f.write(f"\npython {join(dirname(abspath(__file__)).replace('configure', 'simulator'), 'base_mapper.py')} -f {jobname_conf}\n")
+        elif mode == 'mapper' and script is not None:
+            f.write(f"\npython {join(dirname(abspath(__file__)).replace('configure', 'simulator'), f'{script}.py')} -f {jobname_conf}\n")
         else:
             raise ValueError(f"Invalid 'mode' {mode}")
 
-def make_sbatch(jobname, configuration, node_number, mode):
+def make_sbatch(jobname, configuration, node_number, mode, script=None):
     output = configuration[mode]['output']
     jobname_sh = join(output, f"{jobname}_{mode}.sh")
     jobname_log = join(output, f"{jobname}_{mode}.slurm")
     jobname_conf = join(output, f"{jobname}_{mode}.yml")
     make_configuration(jobname_conf, configuration, node_number, mode=mode)
-    make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log, mode)
+    make_sh(jobname, configuration['slurm'], jobname_conf, jobname_sh, jobname_log, mode, script=script)
     system(f"sbatch {jobname_sh}")
 
-def slurm_submission(configuration_file, nodes, mode):
+def slurm_submission(configuration_file, nodes, mode, script=None):
     configuration = load_yaml_conf(configuration_file)
     log = set_logger(get_log_level(configuration['logging']['level']))
     # create output dir
@@ -64,4 +66,4 @@ def slurm_submission(configuration_file, nodes, mode):
     configuration['slurm']['nodes'] = nodes
     for node_number in range(configuration['slurm']['nodes']):
         jobname = f"{configuration['slurm']['name']}_{node_number+1}"
-        make_sbatch(jobname, configuration, node_number, mode=mode)
+        make_sbatch(jobname, configuration, node_number, mode=mode, script=script)
