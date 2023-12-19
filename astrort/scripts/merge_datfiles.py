@@ -13,7 +13,7 @@ from astrort.configure.logging import set_logger
 
 def main(configuration, mode):
     configuration = load_yaml_conf(configuration)
-    logfile = join(configuration[mode]['output'], f'merge_{mode}_data.log')
+    logfile = join(configuration[mode]['output'], f'merged_{mode}_data.log')
     log = set_logger(configuration['logging']['level'], logfile)
     log.info(f"merge {mode} data files")
     merge_data_info(configuration[mode], mode, log)
