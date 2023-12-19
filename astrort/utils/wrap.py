@@ -99,7 +99,7 @@ def write_simulation_info(simulator, configuration, pointing, datfile, clock):
     fov = simulator.fov
     tstart, tstop = simulator.t
     duration = configuration['duration']
-    irf = configuration['irf']
+    irf = simulator.irf
     point_ra, point_dec, offset, source_ra, source_dec = pointing['point_ra'], pointing['point_dec'], pointing['offset'], pointing['source_ra'], pointing['source_dec']
     if not isfile(datfile):
         with open(datfile, 'w+') as f:
