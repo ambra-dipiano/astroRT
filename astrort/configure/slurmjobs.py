@@ -19,7 +19,7 @@ def make_configuration(jobname_conf, configuration, node_number, mode):
     configuration['logging']['logfile'] = join(configuration[mode]['output'], f'job_{node_number+1}_{mode}.log')
     configuration['logging']['datfile'] = join(configuration[mode]['output'], f'job_{node_number+1}_{mode}.dat')
     if configuration[mode]['replicate'] is not None:
-        configuration[mode]['replicate'] = join(dirname(configuration[mode]['replicate']), f'job_{node_number+1}_{mode}.dat')
+        configuration[mode]['replicate'] = join(dirname(configuration[mode]['replicate']), f'job_{node_number+1}_simulator.dat')
     # write new configuration
     with open(jobname_conf, 'w+') as f:
         dump(configuration, f, default_flow_style=False)
