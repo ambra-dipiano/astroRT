@@ -8,6 +8,7 @@
 
 import argparse
 import pandas as pd
+import numpy as np
 from time import time
 from os import makedirs
 from os.path import join
@@ -51,7 +52,10 @@ def base_cleaner(configuration_file, seeds=None):
         log.debug(f"IRF: {mapper.irf}")
         mapper.caldb = configuration['simulator']['prod']
         mapper.e = adjust_tev_range_to_irf(get_instrument_tev_range(configuration['simulator']['array']), mapper.irf)
-        mapper.t = [0, configuration['mapper']['exposure']]
+        if configuration['mapper']['exposure'] == 'random': 
+            mapper.t = [0, np.random.randint(10, configuration['simulator']['duration'])]
+        else:
+            mapper.t = [0, configuration['mapper']['exposure']]
         mapper.roi = get_instrument_fov(configuration['simulator']['array'])
         # make noisy map
         mapper.sky_subtraction = 'NONE'
@@ -78,7 +82,7 @@ def base_cleaner(configuration_file, seeds=None):
         # timing simulation
         clock_map = time() - clock_map
         # save simulation data
-        write_mapping_info(configuration, datfile, clock_map)
+        write_mapping_info(configuration, mapper, datfile, clock_map)
         configuration['simulator']['seed'] += 1
     # end simulations
     log.info(f"\n {'-'*15} \n| STOP MAPPER | \n {'-'*15} \n")

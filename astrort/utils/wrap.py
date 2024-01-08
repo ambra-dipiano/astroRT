@@ -128,10 +128,10 @@ def merge_simulation_info(configuration, log):
     # write merger file
     table.to_csv(merger, index=False, header=True, sep=' ', na_rep=np.nan)
 
-def write_mapping_info(configuration, datfile, clock):
+def write_mapping_info(configuration, mapper, datfile, clock):
     name = seeds_to_string_formatter(configuration['simulator']['samples'], configuration['simulator']['name'], configuration['simulator']['seed'])
     seed = configuration['simulator']['seed']
-    exposure = configuration['mapper']['exposure']
+    exposure = mapper.t[1] - mapper.t[0]
     center_type = configuration['mapper']['center']  
     pixelsize = configuration['mapper']['pixelsize']
     smooth = configuration['mapper']['smooth']
