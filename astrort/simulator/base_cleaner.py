@@ -77,13 +77,13 @@ def base_cleaner(configuration_file, seeds=None):
             clock_plot = time()
             plotmap = plot_map(mapper.output, log)
             log.info(f"Plotting clean image (seed = {seed}) complete, took {time() - clock_plot} s")
-        del mapper
         log.info(f"Mapping (seed = {seed}) complete, took {time() - clock_map} s")
         # timing simulation
         clock_map = time() - clock_map
         # save simulation data
         write_mapping_info(configuration, mapper, datfile, clock_map)
         configuration['simulator']['seed'] += 1
+        del mapper
     # end simulations
     log.info(f"\n {'-'*15} \n| STOP MAPPER | \n {'-'*15} \n")
     log.info(f"Process complete, took {time() - clock} s")
