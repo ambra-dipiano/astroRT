@@ -174,6 +174,8 @@ def set_irf(configuration, log):
     if configuration['irf'] == 'random':
         irf = select_random_irf(configuration['array'], configuration['prod'])
         log.info(f"Randomising instrument response function [{irf}]")
+    elif len(configuration['irf']) < 10:
+        irf = select_random_irf(configuration['array'], configuration['prod'], filter=configuration['irf'])
     else:
         irf = configuration['irf']
     return irf
