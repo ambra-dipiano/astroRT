@@ -71,10 +71,13 @@ def adjust_tev_range_to_irf(erange, irf):
         erange[0] = 0.03
     return erange
 
-def select_random_irf(array, prod):
+def select_random_irf(array, prod, filter=None):
     path = join(expandvars('$CALDB'), f'data/cta/{prod}/bcf')
     irfs = listdir(path)
-    irf = random.choice([i for i in irfs if array in i.lower() and '0.5h' in i.lower()])
+    if filter is None:
+        irf = random.choice([i for i in irfs if array.lower() in i.lower() and '0.5h' in i.lower()])
+    else:
+        irf = random.choice([i for i in irfs if array.lower() in i.lower() and '0.5h' in i.lower() and filter.lower() in i.lower()])
     return irf
 
 def get_all_seeds(simulator):
