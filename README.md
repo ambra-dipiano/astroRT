@@ -6,7 +6,7 @@ To clone the repository you may do the following:
 git clone --recurse-submodules git@github.com:ambra-dipiano/astroRT.git
 ```
 
-## Environment
+## Environment and installation
 To create a virtual environment with all required dependencies:
 
 ```bash
@@ -18,7 +18,13 @@ Once the environment is created, proceeded to install the software.
 
 ```bash
 conda activate astrort
-pip install .
+source install.sh
+```
+
+To install an editable version use instead:
+
+```bash
+source install_dev.sh
 ```
 
 Alternatively you can try creating a `venv` environment. Note that you will require to install `cfitsio`, `gammalib` and `ctools` from source.
@@ -72,30 +78,11 @@ python -m pip install -r requirements.txt
 You may install the software with pip:
 
 ```bash
-pip install -e .
+source install.sh
 ```
 
 To install an editable version use instead:
 
 ```bash
-pip install -e .
+source install_dev.sh
 ```
-
-# Submodules
-This software includes submodules.
-
-## rtasci
-
-Simulator of CTA observations.
-
-## rtavis
-
-Visibility tool for CTA observations.
-
-## rtamock
-
-Scenario mocking software to reproduce CTA real-time observation and analysis conditions.
-
-## rtadeep [TODO]
-
-Deep learning solutions for CTA real-time analysis.
