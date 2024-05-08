@@ -1,19 +1,19 @@
 #!/bin/bas
 
 # install astroRT
-pip install .
+pip install -e .
 
 # install rtasci
 cd rtasci
-pip install .
+pip install -e .
 cd ..
 
 # install rtavis
 cd rtavis
-pip install .
+pip install -e .
 cd ..
 
 # install rtamock
 cd rtamock
-pip install .
+pip install -e .
 cd ..
