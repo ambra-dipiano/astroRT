@@ -21,64 +21,64 @@ class CheckConfiguration():
 
     def check_tags(self):
         tags = ['simulator', 'visibility', 'logging']
-        assert self.conf.keys() == tags
+        assert set(self.conf.keys()) == set(tags), f"Expected keys {tags}, got {list(self.conf.keys())}"
         return self
 
     def check_simulator(self):
         keys = ['name', 'array', 'irf', 'prod', 'pointing', 'target', 'maxoffset', 'duration', 'samples', 'seed', 'model', 'output', 'replicate']
-        assert self.conf['simulator'].keys() == keys
-        assert type(self.conf['simulator']['name']) == str
-        assert type(self.conf['simulator']['array']) in ['lst', 'mst', 'sst', 'cta', 'north', 'south']
-        assert type(self.conf['simulator']['irf']) == str
-        assert type(self.conf['simulator']['prod']) == str
-        assert type(self.conf['simulator']['pointing']) == (str or dict)
-        assert type(self.conf['simulator']['target']) == (str or None)
-        assert type(self.conf['simulator']['maxoffset']) == (int or float)
-        assert type(self.conf['simulator']['duration']) == int
-        assert type(self.conf['simulator']['samples']) == int
-        assert type(self.conf['simulator']['seed']) == int
-        assert type(self.conf['simulator']['model']) == str
-        assert type(self.conf['simulator']['output']) == str
-        assert type(self.conf['simulator']['replicate']) == (str or None)
+        assert set(self.conf['simulator'].keys()) == set(keys), f"Expected keys {keys}, got {list(self.conf['simulator'].keys())}"
+        assert isinstance(self.conf['simulator']['name'], str)
+        assert self.conf['simulator']['array'] in ['lst', 'mst', 'sst', 'cta', 'north', 'south']
+        assert isinstance(self.conf['simulator']['irf'], str)
+        assert isinstance(self.conf['simulator']['prod'], str)
+        assert isinstance(self.conf['simulator']['pointing'], (str, dict))
+        assert self.conf['simulator']['target'] is None or isinstance(self.conf['simulator']['target'], str)
+        assert isinstance(self.conf['simulator']['maxoffset'], (int, float))
+        assert isinstance(self.conf['simulator']['duration'], int)
+        assert isinstance(self.conf['simulator']['samples'], int)
+        assert isinstance(self.conf['simulator']['seed'], int)
+        assert isinstance(self.conf['simulator']['model'], str)
+        assert isinstance(self.conf['simulator']['output'], str)
+        assert self.conf['simulator']['replicate'] is None or isinstance(self.conf['simulator']['replicate'], str)
         return self
 
     def check_visibility(self):
         keys = ['start_time']
-        assert self.conf['visibility'].keys() == keys
-        assert type(self.conf['visibility']['start_time']) == str
+        assert set(self.conf['visibility'].keys()) == set(keys), f"Expected keys {keys}, got {list(self.conf['visibility'].keys())}"
+        assert isinstance(self.conf['visibility']['start_time'], str)
         return self
 
     def check_logging(self):
         keys = ['level', 'logfile', 'datfile']
-        assert self.conf['logging'].keys() == keys
-        assert (type(self.conf['logging']['level']) == str or type(self.conf['logging']['level']) == int) 
-        assert type(self.conf['logging']['logfile']) == str 
-        assert type(self.conf['logging']['datfile']) == str 
+        assert set(self.conf['logging'].keys()) == set(keys), f"Expected keys {keys}, got {list(self.conf['logging'].keys())}"
+        assert isinstance(self.conf['logging']['level'], (str, int))
+        assert isinstance(self.conf['logging']['logfile'], str)
+        assert isinstance(self.conf['logging']['datfile'], str)
         return self
     
     def check_slurm(self):
         keys = ['nodes', 'tasks', 'cpus', 'mem', 'environment', 'name', 'account', 'partition']
-        assert self.conf['slurm'].keys() == keys
-        assert type(self.conf['slurm']['nodes']) == int
-        assert type(self.conf['slurm']['tasks']) == int
-        assert type(self.conf['slurm']['cpus']) == int
-        assert type(self.conf['slurm']['mem']) == str 
-        assert type(self.conf['slurm']['environment']) == str 
-        assert type(self.conf['slurm']['name']) == str 
-        assert type(self.conf['slurm']['account']) == str 
-        assert type(self.conf['slurm']['partition']) == str 
+        assert set(self.conf['slurm'].keys()) == set(keys), f"Expected keys {keys}, got {list(self.conf['slurm'].keys())}"
+        assert isinstance(self.conf['slurm']['nodes'], int)
+        assert isinstance(self.conf['slurm']['tasks'], int)
+        assert isinstance(self.conf['slurm']['cpus'], int)
+        assert isinstance(self.conf['slurm']['mem'], str)
+        assert isinstance(self.conf['slurm']['environment'], str)
+        assert isinstance(self.conf['slurm']['name'], str)
+        assert isinstance(self.conf['slurm']['account'], str)
+        assert isinstance(self.conf['slurm']['partition'], str)
         return self
     
     def check_mapper(self):
         keys = ['exposure', 'smooth', 'pixelsize', 'center', 'plot', 'region', 'output', 'replicate', 'save']
-        assert self.conf['mapper'].keys() == keys
-        assert type(self.conf['mapper']['exposure']) == int
-        assert type(self.conf['mapper']['smooth']) == (float or int)
-        assert type(self.conf['mapper']['pixelsize']) == (float or int)
-        assert type(self.conf['mapper']['center']) in ['pointing', 'source'] 
-        assert type(self.conf['mapper']['plot']) == bool
-        assert type(self.conf['mapper']['region']) == bool
-        assert type(self.conf['mapper']['output']) == str
-        assert type(self.conf['simulator']['replicate']) == (str or None)
-        assert type(self.conf['simulator']['save']) == str
+        assert set(self.conf['mapper'].keys()) == set(keys), f"Expected keys {keys}, got {list(self.conf['mapper'].keys())}"
+        assert isinstance(self.conf['mapper']['exposure'], int)
+        assert isinstance(self.conf['mapper']['smooth'], (float, int))
+        assert isinstance(self.conf['mapper']['pixelsize'], (float, int))
+        assert self.conf['mapper']['center'] in ['pointing', 'source']
+        assert isinstance(self.conf['mapper']['plot'], bool)
+        assert isinstance(self.conf['mapper']['region'], bool)
+        assert isinstance(self.conf['mapper']['output'], str)
+        assert self.conf['mapper']['replicate'] is None or isinstance(self.conf['mapper']['replicate'], str)
+        assert isinstance(self.conf['mapper']['save'], str)
         return self
