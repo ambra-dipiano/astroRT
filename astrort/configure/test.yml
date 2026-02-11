@@ -10,7 +10,7 @@ simulator:
   samples: 2
   seed: 1
   model: $TEMPLATES$/crab.xml
-  output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
+  output: /home/dipiano/astroRT/astrort/testing/tmp
   replicate: null
   
 mapper:
@@ -20,7 +20,7 @@ mapper:
   center: pointing
   plot: true
   region: false
-  output: /data01/homes/dipiano/astroRT/astrort/testing/tmp
+  output: /home/dipiano/astroRT/astrort/testing/tmp
   replicate: null
   save: npy
 
